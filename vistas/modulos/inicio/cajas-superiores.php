@@ -1,21 +1,37 @@
+<?php
 
-<!-- Ventas -->
+  if($_SESSION["perfil"] == "Vendedor"){
+    $item = "id_ven";
+    $valor = $_SESSION['id'];
+  }else{
+    $item = NULL;
+    $valor = NULL;
+  }
+  
+  $consumos = ControladorConsumos:: ctrSumaTotalConsumos($item, $valor);
+  $item = NULL;
+  $valor = NULL;
+  $categorias = ControladorCategorias::ctrMostrarCategorias($item, $valor);
+  $totalCategorias = count($categorias);  
+  $clientes = ControladorClientes::ctrMostrarUsuarios($item, $valor);
+  $totalClientes = count($clientes);  
+  $orden = "id";
+  $productos = ControladorProductos::ctrMostrarProductos($item, $valor, $orden);
+  $totalProductos = count($productos);
+ ?>
+<!-- Consumos -->
 <div class="col-lg-3 col-xs-6">
-
   <div class="small-box bg-aqua">
-
     <div class="inner">
-<!---->
-      <h3>$ <?php echo number_format($ventas["total"],2); ?></h3>
+      <h3>$ <?php echo number_format($consumos["total"],2); ?></h3>
       <p>Ventas</p>
     </div>
     <div class="icon">
       <i class="ion ion-social-usd"></i>
     </div>
-    <a href="ventas" class="small-box-footer">Mas info 
+    <a href="adminconsumos" class="small-box-footer">Mas info 
       <i class="fa fa-arrow-circle-right"></i>
     </a>
-
   </div>
 </div>
 <!-- Categorias -->
@@ -29,12 +45,10 @@
       <i class="ion ion-clipboard"></i>
     </div>
       <a href="categorias" class="small-box-footer">Mas Info 
-        <i class="fa fa-arrow-circle-right"></i>
-       
+        <i class="fa fa-arrow-circle-right"></i>       
       </a>
   </div>
 </div>
-
 <!-- Clientes -->
 <div class="col-lg-3 col-xs-6">
   <div class="small-box bg-yellow">

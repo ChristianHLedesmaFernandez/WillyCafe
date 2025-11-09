@@ -1,6 +1,12 @@
+// Variables Local Storage
+if(localStorage.getItem("capturarRango") != null){
+	$("#daterange-btn span").html(localStorage.getItem("capturarRango"));
+}else{
+	$("#daterange-btn span").html('<i class="fa fa-calendar"></i> Rango de Fecha');
+}
 // Agregar Productos al consumo desde la tabla
 $(document).on("click", ".agregarProducto",function(){
-	var idProducto = $(this).attr("idproducto");
+	var idProducto = $(this).attr("idProducto");
 	$(this).removeClass("btn-primary agregarProducto");
 	$(this).addClass("btn-default");
 	var datos = new FormData();
@@ -17,7 +23,7 @@ $(document).on("click", ".agregarProducto",function(){
 	    	var descripcion = respuesta["descripcion"];
 	    	var stock = respuesta["stock"];
 	    	var precio = respuesta["precio_venta"];
-	    	// Evitar agregar producto cuando el stock este en cero
+	    // Evitar agregar producto cuando el stock este en cero
 			if(stock == 0){
 				swal({
 					type: "error",
@@ -216,12 +222,10 @@ $(document).on("change", "input.nuevaCantidadProducto",function(){
 			confirmButtonText: "¡Cerrar!"
 			});
 	}     	
-    sumarTotalPrecio(); // Suma los precio de los productos.
-    aplicarDescuento(); // Aplicar el Descuento al precio total.
-    blanquearEfectivo(); // Blanquar si el pago es en Efectivo
-	
-	listarProductos() // Agrupar productos en un JSON
-	
+  sumarTotalPrecio(); // Suma los precio de los productos.
+  aplicarDescuento(); // Aplicar el Descuento al precio total.
+  blanquearEfectivo(); // Blanquar si el pago es en Efectivo	
+	listarProductos() // Agrupar productos en un JSON	
 })
 // Sumar todos los Precios
 function sumarTotalPrecio(){
@@ -314,7 +318,6 @@ function cambioEfectivo(){
 	var nuevoCambioEfectivo = $("#nuevoValorEfectivo").parent().parent().parent().children("#capturarCambioEfectivo").children().children("#nuevoCambioEfectivo");
 	nuevoCambioEfectivo.val(cambio);
 }
-
 // Blanquear cambio Efectivo
 function blanquearEfectivo(){	
 	var nuevoCambioEfectivo = $("#nuevoValorEfectivo").parent().parent().parent().children("#capturarCambioEfectivo").children().children("#nuevoCambioEfectivo");
@@ -344,8 +347,126 @@ $(document).on("click", ".btnEditarConsumo",function(){
 	var idConsumo = $(this).attr("idConsumo");
 	window.location = "index.php?ruta=editar-consumo&idConsumo=" + idConsumo;
 })
+// Funcion para desactivar los botones agregar cuando el producto ya habia sido seleccionado en la carpeta
+function quitarAgregarProducto(){
+	// Capturamos todos los id de productos que fueron elegidos en la venta
+	var idProductos = $(".quitarProducto");
+	// Capturamos todos los botones de agregar que aparecen en la tabla
+	var botonesTabla = $(".tablaConsumos tbody button.agregarProducto");
+	// Recorremos en un ciclo para obtener los diferentes idProductos que fueron agregados a la venta
+	for(var i = 0; i < idProductos.length; i++){
+		// Capturamos los Id de los productos agregados a la venta
+		var boton = $(idProductos[i]).attr("idProducto");		
+		// Hacemos un recorrido por la tabla que aparece para desactivar los botones de agregar
+		for(var j = 0; j < botonesTabla.length; j ++){
+			if($(botonesTabla[j]).attr("idProducto") == boton){
+				$(botonesTabla[j]).removeClass("btn-primary agregarProducto");
+				$(botonesTabla[j]).addClass("btn-default");
+			}
+		}
+	}	
+}
+// Cada vez que cargue la tabla cuando navegamos en ella ejecutamos la funcion
+$('.tablaConsumos').on( 'draw.dt', function(){
+	quitarAgregarProducto();
+})
+// Eliminar Consumo
+$(document).on("click", ".btnEliminarConsumo",function(){
+	var idConsumo = $(this).attr("idConsumo");
+	swal({
+		title: '¿Está seguro de borrar el consumo?',
+		text: "¡Si no lo está puede cancelar la acción!",
+		type: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085D6',
+		cancelButtonColor: '#D33',
+		cancelButtonText: 'Cancelar',
+		confirmButtonText: 'Si, borrar consumo!'
+	}).then((result)=>{
+		if(result.value){
+			window.location = "index.php?ruta=adminconsumos&idConsumo="+idConsumo;
+		}
+	})
+})
+// Imprimir Factura
+$(".tablas").on("click", ".btnImprimirFactura",function(){
+	var idConsumo = $(this).attr("idConsumo");
+	window.open("extensiones/tcpdf/pdf/factura.php?codigo=" + idConsumo,"_blank");
+})
+// Rango de Fechas
+$('#daterange-btn').daterangepicker(
+    {
+    	ranges   : {
+          'Hoy'       : [moment(), moment()],
+          'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Ultimos 7 Dias' : [moment().subtract(6, 'days'), moment()],
+          'Ultimos 30 Dias': [moment().subtract(29, 'days'), moment()],
+          'Este Mes'  : [moment().startOf('month'), moment().endOf('month')],
+          'Ultimos Mes'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment(),
 
-//--------------------------------------------------------------------------------------------------
+        endDate  : moment()
+    },
+    function (start, end) {
+    	$('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+ 
+    	var fechaInicial = start.format('YYYY-MM-DD');
+    	var fechaFinal = end.format('YYYY-MM-DD');
+    	var capturarRango = $("#daterange-btn span").html();
+
+
+    	localStorage.setItem("capturarRango", capturarRango);
+    	
+    	// Diferenciar los Botones
+    	//$(".daterangepicker.opensleft .range_inputs .cancelBtn").attr("boton", "paginaVentas");
+    	//$(".daterangepicker.opensleft .ranges li").attr("boton", "paginaVentas");
+    	//Fin Diferenciar
+
+    	window.location = "index.php?ruta=adminconsumos&fechaInicial="+fechaInicial+"&fechaFinal="+fechaFinal;
+    	
+    }
+)
+
+// Cancelar Rango de Fechas
+$(".daterangepicker.opensleft .range_inputs .cancelBtn").on("click", function(){
+
+	localStorage.removeItem("capturarRango");
+	localStorage.clear();
+
+	//if($(this).attr("boton") == "paginaVentas"){
+
+		window.location = "adminconsumos";
+
+	//}
+})
+
+// Capturar Hoy
+$(".daterangepicker.opensleft .ranges li").on("click", function(event){
+	var textoHoy = $(this).attr("data-range-key");
+	if(textoHoy == "Hoy"){
+		var d = new Date();
+		var dia = d.getDate();
+		var mes = d.getMonth() + 1;
+		var año = d.getFullYear();
+		if(mes < 10){
+			mes = "0" + mes;			
+		}
+		if(dia < 10){
+			dia = "0" + dia;
+		}
+		var fechaInicial = año+ "-" + mes + "-" + dia;
+		var fechaFinal = año+ "-" + mes + "-" + dia;		
+		localStorage.setItem("capturarRango", "Hoy");
+
+		//if($(this).attr("boton") == "paginaVentas"){
+			window.location = "index.php?ruta=adminconsumos&fechaInicial="+fechaInicial+"&fechaFinal="+fechaFinal;
+		//}
+	}
+
+})
+
+
 // Para la carga Dinamica de la tabla Productos
 $('.tablaConsumos').DataTable({
 	"ajax": "ajax/datatable-consumos.ajax.php",

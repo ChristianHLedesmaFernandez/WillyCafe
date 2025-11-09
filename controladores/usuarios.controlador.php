@@ -3,14 +3,14 @@
 //require_once "funcs/funcs.php";
 
 class ControladorUsuarios{
+	
 	// Mostrar los Usuarios
 	static public function ctrMostrarUsuarios($item, $valor){
 		$respuesta = ModeloUsuarios::mdlMostrarUsuarios($item, $valor);
 		return $respuesta;
 	}
 	// Crear Usuario
-	//                    Separar mejor los errores. para una mejor vista
-
+	// Separar mejor los errores. para una mejor vista
 	static public function ctrCrearUsuario(){
 		if(isset($_POST['nuevoUsuario'])){
 			// Convierto el nombre a minuscula con la primer letra de cada palabra en mayuscula			
@@ -58,7 +58,7 @@ class ControladorUsuarios{
 							}
 						}
 						// Encriptacion de Contraseña
-						$activo = 3;
+						$activo = //3;
 						$encriptar = cifrarPassword($_POST["nuevoPassword"]);
 						$token =  generaToken();
 						// Cargar Datos en un array()
@@ -303,26 +303,32 @@ class ControladorUsuarios{
 					$validaPassw = password_verify($password, $passwd);
 					if($validaPassw){
 						// Verifica que el usuario ingresado este activo
-						$estado = $respuesta["estado"];						
-						if(isActivo($estado)){
-							// Variables de Sesion
-							$_SESSION["iniciarSesion"] = true;
-							$_SESSION["id"] = $respuesta["id"];
-							$_SESSION["nombre"] = $respuesta["nombre"];
-							$_SESSION["apellido"] = $respuesta["apellido"];
-							$_SESSION["usuario"] = $respuesta["usuario"];
-							$_SESSION["foto"] = $respuesta["foto"];
-							$_SESSION["perfil"] = $respuesta["perfil"];	
+						$estado = $respuesta["estado"];
+						if(isActivo($estado)){	
 							// Actualizo el ultimo Login			
 							$ultimoLogin = ModeloUsuarios::mdlUltimoLogin($respuesta["id"]);
 							if ($ultimoLogin) {
 								//$token = $respuesta["token"];
-								if(primeraVez($estado)){									
-									echo '<br><div class="alert alert-danger">El usuario aùn no Completo el Registro</div>';
+								$_SESSION["id"] = $respuesta["id"];
+								$_SESSION["nombre"] = $respuesta["nombre"];
+								$_SESSION["perfil"] = $respuesta["perfil"];	
+
+								if(primeraVez($estado)){								
+									//echo '<br><div class="alert alert-danger">El usuario aùn no Completo el Registro</div>';
+									echo '<script>window.location = "completar-registro";</script>';
 									}else {
+										// Variables de Sesion
+										$_SESSION["iniciarSesion"] = true;
+										//$_SESSION["id"] = $respuesta["id"];
+										$_SESSION["apellido"] = $respuesta["apellido"];
+										$_SESSION["usuario"] = $respuesta["usuario"];
+										$_SESSION["foto"] = $respuesta["foto"];
+										// Fecha ultimo inicio de session
+										$_SESSION["sesion"] = $respuesta["last_session"];	
+										// Fin Variables de Sesion
 										echo '<script>window.location = "inicio";</script>';
 									}	
-								}			
+								}
 						} else{
 							echo '<br><div class="alert alert-danger">El usuario aùn no esta activado</div>';
 						}
@@ -407,7 +413,7 @@ class ControladorUsuarios{
 			if ($errores == 0) {
 				// Validar captcha directamente en google. regresa un Json
 				
-// re rompe si viene mal la consulta al captcha
+				// Se rompe si viene mal la consulta al captcha
 				try {
 					$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha");
 					$arr = json_decode($response, TRUE);
@@ -417,8 +423,7 @@ class ControladorUsuarios{
 					console.log("ERROR DEL CAPTCHA");
 				}
 				
-
-// Capturar error con try catch
+				// Capturar error con try catch
 
 				if ($arr['success']) {
 					// Ciframos la contraseña para guardarla en la Base de datos.
@@ -555,11 +560,11 @@ class ControladorUsuarios{
 			$idUsuario = $_POST["idUsuario"];
 			$token = $_POST["token"];
 			$password = $_POST["password"];
-			$con_password = $_POST["rePassword"];
+			$rePassword = $_POST["rePassword"];
 			if(!isPassword($password)){
 				echo '<br><div class="alert alert-danger">Las contraseñas Debe llevar solo letras y numeros</div>';	
 			}else{				
-				if(!validarPassword($password, $con_password)){
+				if(!validarPassword($password, $rePassword)){
 					echo '<br><div class="alert alert-danger">Las contraseñas no coinciden</div>';
 				}else{	
 					$pass_hash = cifrarPassword($password);
@@ -572,6 +577,7 @@ class ControladorUsuarios{
 					}
 				}
 			}
+			
 		}	
 	}
 

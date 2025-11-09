@@ -60,7 +60,7 @@ $(".tablas").on("click", ".btnEliminarLocal",function(){
 		confirmButtonColor: '#3085D6',
 		cancelButtonColor: '#D33',
 		cancelButtonText: 'Cancelar',
-		confirmButtonText: 'Si, borrar categoría!'
+		confirmButtonText: 'Si, borrar Local!'
 	}).then((result)=>{		
 		if(result.value){
 			// Uso un peticion Ajax para eliminar el local

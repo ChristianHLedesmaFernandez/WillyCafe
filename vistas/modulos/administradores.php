@@ -1,11 +1,10 @@
 <?php 
-/*
-if($_SESSION["perfil"] == "Vendedor" || $_SESSION["perfil"] == "Cliente" ){
+if($_SESSION["perfil"] == "Vendedor" || $_SESSION["perfil"] == "Cliente"){
   echo '<script>
           window.location = "inicio";
         </script>';
   return;
-}*/
+}
 ?>
 <div class="content-wrapper">
   <!-- Encabezado de contenido (encabezado de página) -->
@@ -25,11 +24,13 @@ if($_SESSION["perfil"] == "Vendedor" || $_SESSION["perfil"] == "Cliente" ){
   <section class="content"> 
     <!-- Caja predeterminada -->
     <div class="box">
+    <!--  
     <div class="box-header with-border">
       <button class="btn btn-primary btnNuevoUsuario btnModal" data-toggle="modal" data-target="#modalAgregarUsuario">
         Agregar Administrador
       </button>
     </div>
+    -->
       <div class="box-body">
                <table class="table table-bordered table-striped dt-responsive tablas" width="100%">             
           <thead>

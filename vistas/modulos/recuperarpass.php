@@ -87,8 +87,8 @@ $fondo = rand(0, (count($fondosArray)-1));
     <div>     
 
       <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-        <a href="login" class="text-center">Iniciar Sesi&oacute;n</a><br>
-        No se ha registrado aun! <a href="registro">Solicitar Registro aquí</a>
+        <a href="login" class="text-center link-nav">Iniciar Sesi&oacute;n</a><br>
+        No se ha registrado aun! <a href="registro" class="link-nav">Solicitar Registro aquí</a>
       </div>
       
     </div>

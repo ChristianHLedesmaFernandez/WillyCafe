@@ -1,21 +1,28 @@
 <?php 
 
+
+//--------------------------------------------------------------//
+//                      Salida por Consola                      //
+//	echo("<script>console.log('Dentro de ControladorLocales');</script>");
+//--------------------------------------------------------------//
+
 class ControladorLocales{
-	// Mostrar Locales
+
+// Mostrar Locales
 	static public function ctrMostrarLocales($item, $valor){		
 		$respuesta = ModeloLocales::mdlMostrarLocales($item, $valor);
 		return $respuesta;	
 	}
 	static public function ctrMostrarLocalesSugerido($item, $valor){		
 		$respuesta = ModeloLocales::mdlMostrarLocalesSugerido($item, $valor);
-		return $respuesta;	
+		return $respuesta;		
 	}	
 	// Crear Local
 	static public function ctrCrearLocal(){
 		if(isset($_POST["nuevoLocal"])){
 			$local = ucwords(strtolower($_POST['nuevoLocal']));
 			$telefono = $_POST["nuevoTelefono"];
-			$direccion = ucwords(strtolower($_POST['nuevaDireccion']));
+			$direccion = ucwords(strtolower($_POST['nuevaDireccion']));	
 			if(isNombre($local) &&					   
 			   isTelefono($telefono) &&
 			   isDireccion($direccion)){					
@@ -24,7 +31,9 @@ class ControladorLocales{
 					$datos = array("nombre" 	=> $local,
 							   	   "telefono" 	=> $telefono,
 							   	   "direccion" 	=> $direccion);
+					
 					$respuesta = ModeloLocales::mdlCrearLocal($datos);
+
 					if($respuesta){
 						echo '<script>
 								swal({

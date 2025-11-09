@@ -1,5 +1,8 @@
 <?php 
 
+require_once __DIR__ . '/usuarios.controlador.php';
+require_once __DIR__ . '/../modelos/usuarios.modelo.php'; // si el modelo también se usa
+
 class ControladorClientes extends ControladorUsuarios{
 
 	// Mostrar los Usuarios
@@ -384,5 +387,99 @@ class ControladorClientes extends ControladorUsuarios{
 				</script>';	
 			}
 		}	
+	}
+	// Completar Registro
+	static public function ctrCompletarRegistro(){
+		$errores = 0; 	// Cuenta los errores del formulario
+		if(!empty($_POST)){
+			$idUsuario = $_POST["idUsuario"];
+			$usuario = $_POST["usuario"];
+			$apellido = ucwords(strtolower($_POST["ingApellido"]));
+			$telefono =  $_POST["ingTelefono"];
+			$fechaNacimiento = $_POST["ingFechaNacimiento"];
+			$foto = $_FILES["ingFoto"]["tmp_name"];
+			$ruta = "";
+			// Para Crear la cuenta
+			$compras = $descuento = $saldoActual = $saldoAnterior = 0;
+			$ultimaCompra = "0000-00-00 00:00:00";
+			if(!isApellido($apellido)){
+				$errores++;
+				echo '<br><div class="alert alert-danger">El Apellido no puede ir vacío o llevar caracteres especiales</div>';
+			}else{
+				if(!isTelefono($telefono)){
+					$errores++;
+					echo '<br><div class="alert alert-danger">Ingrese un telefono valido!</div>';
+				}else{
+					if (!isFechaValida($fechaNacimiento)) {
+						$errores++;
+						echo '<br><div class="alert alert-danger">La fecha no es Validad</div>';
+					}else{
+						if (!isMayor($fechaNacimiento)) {
+							$errores++;
+							echo '<br><div class="alert alert-danger">Debe ser mayor de 18 años!</div>';
+						}
+					}
+				}
+			}
+			// Validar Foto
+			if(isset($foto)){
+				// Para redimensionar la foto
+				list($ancho, $alto) = getimagesize($foto);
+				$nuevoAncho = 500;
+				$nuevoAlto = 500;
+				// Creamos el directorio donde guardaremos la foto
+				$directorio = "vistas/img/usuarios/". $usuario;
+				mkdir($directorio, 0755);
+				$rand = mt_rand(100, 999);	// nombre del archivo
+				// Guardo segun la imagen sea JPG o PNG 
+				if($_FILES["ingFoto"]["type"] == "image/jpeg"){						
+					$ruta = "vistas/img/usuarios/" . $usuario . "/".$rand . ".jpg";
+					$origen = imagecreatefromjpeg($foto);
+					$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+					imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+					imagejpeg($destino, $ruta);
+					}
+				if($_FILES["ingFoto"]["type"] == "image/png"){
+					$ruta = "vistas/img/usuarios/" . $usuario . "/".$rand . ".png";
+					$origen = imagecreatefrompng($foto);
+					$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+					imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+					imagepng($destino, $ruta);						
+				}
+			}
+			if ($errores == 0) {
+				$estado = 4; // Estado registro Finalizado.
+				// Enviar datos al modelo
+				$datos = array("id" 				=> $idUsuario,
+							   "usuario" 			=> $usuario, 	
+							   "apellido" 			=> $apellido,
+							   "telefono"			=> $telefono,								   
+							   "estado"				=> $estado,
+							   "fechaNacimiento"	=> $fechaNacimiento,								   
+						   	   "foto" 				=> $ruta);
+				$respuesta = ModeloUsuarios::mdlCompletarRegistro($datos);
+				if($respuesta){
+					$datosCuenta = array("id" 				=> $idUsuario,
+									     "descuento" 		=> $descuento, 	
+									     "compras" 			=> $compras,
+									     "ultimaCompra"		=> $ultimaCompra,								   
+									     "saldoActual"		=> $saldoActual,
+									     "saldoAnterior"	=> $saldoAnterior);
+					$respuesta = ModeloCuentas::mdlCrearCuenta($datosCuenta);
+					// Variables de Sesion
+					$_SESSION["iniciarSesion"] = true;
+					//$_SESSION["id"] = $respuesta["id"];
+					$_SESSION["apellido"] = $apellido;
+					$_SESSION["usuario"] = $usuario;
+					$_SESSION["foto"] = $ruta;
+					// Fecha ultimo inicio de session
+					$_SESSION["sesion"] = "Primera Vez";	
+					// Fin Variables de Sesion
+					echo '<script>window.location = "inicio";</script>';
+				}else{
+					echo '<br><div class="alert alert-danger">Error al Completar el Registro</div>';
+				}				
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 <?php 
-if($_SESSION["perfil"] == "Vendedor"){
+if($_SESSION["perfil"] == "Cliente"){
   echo '<script>
           window.location = "inicio";
         </script>';
@@ -23,11 +23,17 @@ if($_SESSION["perfil"] == "Vendedor"){
   <section class="content">
     <!-- Caja predeterminada -->
     <div class="box">
-      <div class="box-header with-border">
-        <button class="btn btn-primary btnModal" data-toggle="modal" data-target="#modalAgregarCategoria">
-          Agregar Categoria
-        </button>
-      </div>
+      <?php 
+        if($_SESSION["perfil"] == "Administrador"){
+          echo '
+            <div class="box-header with-border">
+              <button class="btn btn-primary btnModal" data-toggle="modal" data-target="#modalAgregarCategoria">
+                Agregar Categoria
+              </button>
+            </div>';
+          }
+       ?>
+      
       <!-- Cuerpo de la Pagina -->
       <div class="box-body">
         <table class="table table-bordered table-striped dt-responsive tablas" width="100%">           

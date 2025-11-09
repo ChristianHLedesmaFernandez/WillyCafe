@@ -1,5 +1,5 @@
 <?php
-if($_SESSION["perfil"] == "Vendedor"){
+if($_SESSION["perfil"] == "Cliente"){
   echo '<script>
           window.location = "inicio";
         </script>';
@@ -19,11 +19,13 @@ if($_SESSION["perfil"] == "Vendedor"){
   </section>
     <section class="content">
     <div class="box">
+      <!--
       <div class="box-header with-border">
         <button class="btn btn-primary btnModal btnNuevoCliente" data-toggle="modal" data-target="#modalAgregarCliente">
           Agregar Clientes
         </button>
       </div>
+      -->
       <div class="box-body">
         <table class="table table-bordered table-striped dt-responsive tablas" width="100%">          
           <thead>
@@ -59,7 +61,11 @@ if($_SESSION["perfil"] == "Vendedor"){
               switch($value["estado"]){
                   case -1: 
                   case  0:
-                    echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-danger btn-xs btnActivar" idUsuario="'. $value["id"] .'" estadoUsuario="'.$estadoAnterior.'" usuarios="clientes">Desactivado</button></td>';
+                    if($_SESSION["perfil"] == "Administrador"){
+                      echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-danger btn-xs btnActivar" idUsuario="'. $value["id"] .'" estadoUsuario="'.$estadoAnterior.'" usuarios="clientes">Desactivado</button></td>';
+                    }else{
+                      echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-danger btn-xs">Desactivado</button></td>';
+                    }                    
                     break;
                   case 1: 
                       echo '<td style="vertical-align : middle; text-align:center;"><a href="solicitudes" class="btn btn-info btn-xs">Aceptar Solicitud</a></td>';
@@ -68,11 +74,19 @@ if($_SESSION["perfil"] == "Vendedor"){
                       echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-warning btn-xs">Pendiente de Activacion</button></td>';
                       break;
                   case 3:
+                    if($_SESSION["perfil"] == "Administrador"){
                       echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-success btn-xs btnActivar" idUsuario="'. $value["id"] .'" estadoUsuario="-1" usuarios="clientes">activado</button></td>';
-                      break;
-                  case 4:                         
+                    }else{
+                      echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-success btn-xs">activado</button></td>';
+                    }
+                    break;
+                  case 4:
+                    if($_SESSION["perfil"] == "Administrador"){                         
                       echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-success btn-xs btnActivar" idUsuario="'. $value["id"] .'" estadoUsuario="0" usuarios="clientes">Activado</button></td>';
-                      break;                          
+                    }else{
+                      echo '<td style="vertical-align : middle; text-align:center;"><button class="btn btn-success btn-xs">Activado</button></td>';
+                    }
+                    break;                          
                       }          
               // Fin Estados
 

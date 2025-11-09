@@ -39,7 +39,7 @@ $fondo = rand(0, (count($fondosArray)-1));
       <div class="form-group has-feedback" id="nombre">
         <div>
           <input type="text" class="form-control" placeholder="Nombre" name="ingNombre" id="ingNombre" required autofocus>
-          <span class="fa fa-address-card form-control-feedback"></span>
+          <span class="fa fa-address-card form-control-feedback "></span>
         </div>
       </div>
       <!-- Ingrese Usuario -->
@@ -106,7 +106,7 @@ $fondo = rand(0, (count($fondosArray)-1));
   -->       
     </div>
     <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-      <a href="login" class="text-center">Ya estoy Registrado!</a>
+      <a href="login" class="text-center link-nav">Ya estoy Registrado!</a>
     </div>
   </div>
   <!-- /.form-box -->

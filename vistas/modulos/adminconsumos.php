@@ -1,3 +1,12 @@
+<?php 
+if($_SESSION["perfil"] == "Cliente"){
+  echo '<script>
+          window.location = "inicio";
+        </script>';
+  return;
+}
+?>
+
 <div class="content-wrapper">
   <!-- Encabezado de contenido (encabezado de página) -->
   <section class="content-header">
@@ -14,10 +23,8 @@
   <!-- Fin Encabezado de contenido -->
   <!-- Contenido principal  -->
   <section class="content">
-
     <!-- Caja predeterminada -->
     <div class="box">
-
       <div class="box-header with-border">
         <a href="crear-consumo">
           <button class="btn btn-primary">
@@ -27,7 +34,7 @@
         <!-- Comienzo Boton de Rango de Fecha -->
         <button type="button" class="btn btn-default pull-right" id="daterange-btn">          
           <span>
-            <i class="fa fa-calendar"></i> Rango de Fecha
+            <i class="fa fa-calendar"></i>  Rango de Fecha 
           </span> 
             <i class="fa fa-caret-down"></i>
         </button>
@@ -35,8 +42,7 @@
       </div>
       <!-- Cuerpo de la Pagina -->
       <div class="box-body">
-        <table class="table table-bordered table-striped dt-responsive tablas" width="100%"> 
-          
+        <table class="table table-bordered table-striped dt-responsive tablas" width="100%">           
           <thead>
             <!-- Ver como quedan los titulos centrados. -->
            <tr>
@@ -49,127 +55,65 @@
              <th>Total</th>
              <th>Fecha</th>
              <th style="text-align: center;">Acciones</th>
-
-           </tr>            
-
+           </tr> 
           </thead> 
-
           <tbody>
             <?php
-            $item = NULL;
-            $valor = NULL;
-            $respuesta = ControladorConsumos::ctrMostrarConsumos($item, $valor);
-            //
-            //var_dump($respuesta);
-            //
-            foreach ($respuesta as $key => $value) {
-              
-              echo '<tr>            
-                      <td style="vertical-align : middle;">'. ($key+1) .'</td>
-                      <td style="vertical-align : middle;">'.$value["codigo"].'</td>
-                      <td style="vertical-align : middle;">'.$value["cliente"].'</td>
-                      <td style="vertical-align : middle;">'.$value["vendedor"].'</td>
-                      <td style="vertical-align : middle;">'.$value["metodo_pago"].'</td> 
-                      <td style="vertical-align : middle;">'.$value["neto"].'</td>
-                      <td style="vertical-align : middle;">'.$value["total"].'</td>
-                      <td style="vertical-align : middle;">'.$value["fecha"].'</td>
-                      <td style="text-align: center;">
-                        <div class="btn-group">                
-                          <button class="btn btn-info"><i class="fa fa-print"></i></button>
-                          <button class="btn btn-warning btnEditarConsumo" idConsumo="'.$value["id_con"].'"><i class="fa fa-pencil"></i></button>
-                          <button class="btn btn-danger"><i class="fa fa-times"></i></button>
-                        </div>
-                      </td>
-                    </tr>';
-                    
-            }
-            ?>
 
-
-         
-                      
-
-        
-            <?php 
-/*
               if(isset($_GET["fechaInicial"])){
-
                 $fechaInicial = $_GET["fechaInicial"];
                 $fechaFinal =$_GET["fechaFinal"];
-
               }else{
-
-                $fechaInicial = null;
-                $fechaFinal = null;
-
+                $fechaInicial = NULL;
+                $fechaFinal = NULL;
               }
 
-              //$respuesta = ControladorVentas:: ctrMostrarVentas($item, $valor);
-              $respuesta = ControladorVentas:: ctrMostrarRangoFechasVentas($fechaInicial, $fechaFinal);
-              
-              foreach ($respuesta as $key => $value) {
-                
+            //$item = NULL;
+            //$valor = NULL;            
+            //$respuesta = ControladorConsumos::ctrMostrarConsumos($item, $valor);   
+            $respuesta = ControladorConsumos::ctrMostrarRangoFechasConsumos($fechaInicial, $fechaFinal);            
+            
+            foreach ($respuesta as $key => $value) { 
+              if($_SESSION["id"] == $value["id_ven"] || $_SESSION["perfil"] == "Administrador"){
+                //-------------------------------
                 echo '<tr>            
-                        <td style="vertical-align : middle;">'. ($key + 1) .'</td>
-                        <td style="vertical-align : middle;">'. $value["codigo"] .'</td>';
-
-                $itemCliente = "id";
-                $valorCliente = $value["id_cliente"];
-
-                $respuestaCliente = ControladorClientes:: ctrMostrarClientes($itemCliente, $valorCliente);
-
-                echo '  <td style="vertical-align : middle;">'.$respuestaCliente["nombre"] .'</td>';
-
-                $itemUsuario = "id";
-                $valorUsuario = $value["id_vendedor"];
-
-                $respuestaUsuario = ControladorUsuarios:: ctrMostrarUsuarios($itemUsuario, $valorUsuario);
-
-                echo '  <td style="vertical-align : middle;">'. $respuestaUsuario["nombre"] .'</td>
-                        <td style="vertical-align : middle;">'. $value["metodo_pago"] .'</td>
-                        <td style="vertical-align : middle;">'. number_format($value["neto"], 2) .'</td>
-                        <td style="vertical-align : middle;">'. number_format($value["total"], 2) .'</td>
-                        <td style="vertical-align : middle;">'. $value["fecha"] .'</td>
+                        <td style="vertical-align : middle;">'. ($key+1) .'</td>
+                        <td style="vertical-align : middle;">'.$value["codigo"].'</td>
+                        <td style="vertical-align : middle;">'.$value["cliente"].'</td>
+                        <td style="vertical-align : middle;">'.$value["vendedor"].'</td>
+                        <td style="vertical-align : middle;">'.$value["metodo_pago"].'</td> 
+                        <td style="vertical-align : middle;">'.$value["neto"].'</td>
+                        <td style="vertical-align : middle;">'.$value["total"].'</td>
+                        <td style="vertical-align : middle;">'.$value["fecha"].'</td>
                         <td style="text-align: center;">
                           <div class="btn-group">                
-                            <button class="btn btn-info btnImprimirFactura" codigoVenta="'. $value["codigo"] .'">
-                              <i class="fa fa-print"></i>
-                            </button>';
-                            
+                            <button class="btn btn-info btnImprimirFactura" idConsumo="'.$value["codigo"].'"><i class="fa fa-print"></i></button>';
                 if($_SESSION["perfil"] == "Administrador"){
                   echo '
-                            <button class="btn btn-warning btnEditarVenta" idVenta="'. $value["id"] .'"><i class="fa fa-pencil"></i></button>
-               
-                            <button class="btn btn-danger btnEliminarVenta" idVenta="'. $value["id"] .'"><i class="fa fa-times"></i></button>
-                          </div>
+                            <button class="btn btn-warning btnEditarConsumo" idConsumo="'.$value["id_con"].'"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-danger btnEliminarConsumo" idConsumo="'.$value["id_con"].'"><i class="fa fa-times"></i></button>';
+                }                          
+                echo ' 
+                      </div>
                         </td>
                       </tr>';
-                }
+                //---------------------------------------------
               }
-*/
-            ?> 
-       
-          </tbody>       
 
+            }
+            ?>
+                    
+          </tbody> 
         </table>
         <!-- Ejecutar eliminar Venta -->
          <?php
-
-        //$eliminarVenta = new ControladorVentas();
-        //$eliminarVenta -> ctrEliminarVenta();
-
-        ?>
-        
+        $eliminarConsumo = new ControladorConsumos();
+        $eliminarConsumo -> ctrEliminarConsumo();
+        ?>        
       </div>
       <!-- Fin box-body -->
-
     </div>
     <!-- /. Fin Caja predeterminada -->
-
   </section>
   <!-- Fin Contenido principal -->
-
 </div>
-
-
-

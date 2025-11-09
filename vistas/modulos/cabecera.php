@@ -1,7 +1,7 @@
 <header class="main-header">
 	<!-- Logotipo -->
 	<a href="inicio" class="logo">
-      <!-- Logo cuando el menu esta minimisado -->
+      <!-- Logo cuando el menu esta minimizado -->
       <span class="logo-mini">
       	<img src="vistas/img/plantilla/willycafe-mini.ico" class="img-responsive" style="padding: 10px">
       </span>
@@ -59,7 +59,12 @@
       				<!-- Fin -->
 	                <p>
 	                   <?php echo $_SESSION["perfil"] . " - " . $_SESSION["nombre"] ?>
+	                  <!--
 	                  <small>Miembro desde Nov. 2017</small>
+	                   -->
+	                   <?php 
+	                  echo '<small>Fecha ultima sesion: ' . $_SESSION["sesion"] . '</small>'?>
+
 	                </p>
 	              </li>
 	              <!-- Menú de pie de página-->

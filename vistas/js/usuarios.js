@@ -61,6 +61,7 @@ $(document).on("click", ".btnEditarUsuario",function(){
 		}
 	});
 })
+
 // Activar/Desactivar Usuario
 $(document).on("click", ".btnActivar",function(){
 	var idUsuario = $(this).attr("idUsuario");

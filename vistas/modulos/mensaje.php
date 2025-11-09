@@ -34,17 +34,20 @@ if (isset($_GET["msj"])){
             overflow: hidden;
             z-index: -1;">
 <!-- Fin Estilo  -->
-      <h2 style="text-align:center; color:white">
+
+</div>
+      <h2 style="text-align:center; color: orange;"> <!-- white -->
 
          <?php 
             echo $mensaje;
-          ?>
+        ?>
          
          <p style="text-align:center;">
             <br />
             <br />
-            <a href='login'>Iniciar Sesion</a> 
+            <a href="login" class="text-center">Iniciar Sesi&oacute;n</a><br> 
          </p>
 
-      <h2>
-</div>
+      </h2>
+
+  

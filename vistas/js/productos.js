@@ -1,6 +1,7 @@
 // Cargar la tabla dinamica de Productos
-/* Para detectar Errores (imprime el Datos Json en la consola)
-$.ajax({
+//Para detectar Errores (imprime el Datos Json en la consola)
+/*
+	$.ajax({
 	
 	url:"ajax/datatable-productos.ajax.php",
 	success:function(respuesta){
@@ -9,8 +10,10 @@ $.ajax({
 
 	}
 
-})
-*/
+});
+
+ */
+
 // Para Hacer Foco en el Input dentro del Modal
 $('#modalAgregarProducto').on('shown.bs.modal', function() {
   $('#nuevaCategoria').focus()
@@ -117,9 +120,15 @@ $(document).on("click", ".btnEliminarProducto",function(){
 		}
 	})
 })
+
+// Capturar lo que llega en perfilOculto
+var perfilOculto = $("#perfilOculto").val();
+// Para pasar variable de Sesion a un archivo AJAX
+
+
 // Para la carga Dinamica de Productos
 $('.tablaProductos').DataTable({
-	"ajax": "ajax/datatable-productos.ajax.php",
+	"ajax": "ajax/datatable-productos.ajax.php?perfilOculto=" + perfilOculto,
 	"deferRender": true,
 	"retrieve": true,
 	"processing": true,

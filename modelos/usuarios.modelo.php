@@ -108,8 +108,53 @@ class ModeloUsuarios{
 		$stmt -> close();
 		$stmt = null;
 	}
-	//------------------------------------------------------------------------------------------------------------------------//
-	//                                                Metodos antes de Logearse --------------------------------------------------------------------------------------------------------------------------//
+	// Completar Registro
+	static public function mdlCompletarRegistro($datos){
+
+		//----------------
+		/*
+		echo("<script>console.log('ID Usuario = ". $datos["id"] ."');</script>");
+		echo("<script>console.log('Usuario = ". $datos["usuario"] ."');</script>");
+		echo("<script>console.log('Apellido = ". $datos["apellido"] ."');</script>");
+		echo("<script>console.log('Telefono = ". $datos["telefono"] ."');</script>");
+		echo("<script>console.log('estado = ". $datos["estado"] ."');</script>");
+		echo("<script>console.log('Fecha Nacimiento = ". $datos["fechaNacimiento"] ."');</script>");
+		echo("<script>console.log('Foto = ". $datos["foto"] ."');</script>");
+		*/
+		//----------------
+
+		// Cambio el estado 
+		$stmt1 = Conexion::conectar()->prepare("UPDATE user_config SET estado = :estado WHERE id_user =  :id");
+		$stmt1 -> bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
+		$stmt1 -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
+		if($stmt1 -> execute()){
+			// Modifico la Tabla usuarios
+			$stmt = Conexion::conectar()->prepare("UPDATE usuarios SET apellido = :apellido, telefono = :telefono, nacimiento = :nacimiento, foto = :foto WHERE id = :id");
+			$stmt -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
+			$stmt -> bindParam(":apellido", $datos["apellido"], PDO::PARAM_STR);
+			$stmt -> bindParam(":telefono", $datos["telefono"], PDO::PARAM_STR);
+			$stmt -> bindParam(":nacimiento", $datos["fechaNacimiento"], PDO::PARAM_STR);
+			$stmt -> bindParam(":foto", $datos["foto"], PDO::PARAM_STR);
+			
+			if($stmt -> execute()){
+				return true;
+			}else{
+				return false;
+			}	
+		}else{				
+			// No Modifico retorno error	
+			return false;
+			}
+		$stmt->close();
+		$stmt1->close();	
+		$stmt = NULL;
+		$stmt1 = NULL;
+
+
+		
+	}
+	//---------------------------------------------------------------------------------------------------------------------//
+	//                                                Metodos antes de Logearse                                             -----------------------------------------------------------------------------------------------------------------------//
 	// Buscar el usuario en la base de datos para el Login (Busca por el usuario o por el correo electronico)
 	static public function mdlLogin($usuario){
 		$stmt = Conexion::conectar() -> prepare("SELECT * FROM usuarios INNER JOIN user_config ON usuarios.id = user_config.id_user WHERE usuarios.usuario = ? || usuarios.correo = ? LIMIT 1");	
@@ -120,6 +165,7 @@ class ModeloUsuarios{
 		$stmt -> close();
 		$stmt = null;
 	}
+
 	// Actualizar Ultimo ingreso del Usuario (Modifica la tabla usuarios y user_config)
 	static public function mdlUltimoLogin($id){;
 		$stmt = Conexion::conectar()->prepare("UPDATE usuarios INNER JOIN user_config ON usuarios.id = user_config.id_user SET usuarios.last_session = NOW(), user_config.token_password = '', user_config.password_request = 0 WHERE usuarios.id = ?");
@@ -131,7 +177,8 @@ class ModeloUsuarios{
 		}
 		$stmt -> close();		
 		$stmt = null;
-	}	
+	}
+
 	// Actualizar un Campo de un Usuario
 	static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2){
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item1 = :$item1 WHERE $item2 = :$item2");
@@ -146,6 +193,7 @@ class ModeloUsuarios{
 		$stmt -> close();		
 		$stmt = null;
 	}
+	
 	// Validar Token Password
 	static public function mdlValidarTokenPass($id, $token){
 		$stmt = Conexion::conectar() -> prepare("SELECT estado, password_request FROM user_config WHERE id_user = ? AND token_password = ? LIMIT 1");
@@ -156,8 +204,13 @@ class ModeloUsuarios{
 		$stmt -> close();
 		$stmt = null;		
 	}
+
 	// Cambiar contraseña
 	static public function mdlCambiarPassword($password, $id, $token){ 
+		//--------------------------------------------------------------//
+//                      Salida por Consola                      //
+	echo("<script>console.log('Dentro de ModeloUsuarios');</script>");
+//--------------------------------------------------------------//
 		$stmt0 = Conexion::conectar() -> prepare("UPDATE user_config SET token_password='', password_request= 0 WHERE id_user = ? AND token_password = ?");	
 		$stmt0 -> bindParam(1, $id, PDO::PARAM_STR);
 		$stmt0 -> bindParam(2, $token, PDO::PARAM_STR);

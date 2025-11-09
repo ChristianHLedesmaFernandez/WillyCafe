@@ -1,0 +1,123 @@
+<?php
+/* */
+if($_SESSION["perfil"] == "Administrador" || $_SESSION["perfil"] == "Vendedor"){
+  echo '<script>
+          window.location = "inicio";
+        </script>';
+  return;
+}
+
+?>
+
+<div class="content-wrapper">
+  <!-- Encabezado de contenido (encabezado de página) -->
+  <section class="content-header">
+    <h1>
+      Consumos
+      <small>Consultar Consumos</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="inicio"><i class="fa fa-dashboard"></i>Inicio</a></li>
+      <li>Consumos</li>            
+      <li class="active">Administrar</li>
+    </ol>
+  </section>
+  <!-- Fin Encabezado de contenido -->
+  <!-- Contenido principal  -->
+  <section class="content">
+    <!-- Caja predeterminada -->
+    <div class="box">
+      <div class="box-header with-border">
+        <a href="crear-consumo">
+          <button class="btn btn-warning">
+              Pagar Saldo
+          </button>
+        </a>
+        <!-- Comienzo Boton de Rango de Fecha -->
+        <button type="button" class="btn btn-default pull-right" id="daterange-btn">          
+          <span>
+            <i class="fa fa-calendar"></i>  Rango de Fecha 
+          </span> 
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <!-- Fin Boton de Rango -->
+      </div>
+      <!-- Cuerpo de la Pagina -->
+      <div class="box-body">
+        <table class="table table-bordered table-striped dt-responsive tablas" width="100%">           
+          <thead>
+            <!-- Ver como quedan los titulos centrados. -->
+           <tr>
+             <th style="width: 10px">#</th>
+             <th>Codigo Factura</th>
+             <th>Estado</th>
+             <th>Vendedor</th>
+             <th>Forma de Pago</th> 
+             <th>Neto</th>
+             <th>Total</th>
+             <th>Fecha</th>
+             <th style="text-align: center;">Acciones</th>
+           </tr> 
+          </thead> 
+          <tbody>
+            <?php
+
+              if(isset($_GET["fechaInicial"])){
+                $fechaInicial = $_GET["fechaInicial"];
+                $fechaFinal =$_GET["fechaFinal"];
+              }else{
+                $fechaInicial = NULL;
+                $fechaFinal = NULL;
+              }
+
+            //$item = NULL;
+            //$valor = NULL;            
+            //$respuesta = ControladorConsumos::ctrMostrarConsumos($item, $valor);   
+            $respuesta = ControladorConsumos::ctrMostrarRangoFechasConsumos($fechaInicial, $fechaFinal);            
+            
+            foreach ($respuesta as $key => $value) { 
+              if($_SESSION["id"] == $value["id_cli"]){
+                //-------------------------------
+                echo '<tr>            
+                        <td style="vertical-align : middle;">'. ($key+1) .'</td>
+                        <td style="vertical-align : middle;">'.$value["codigo"].'</td>
+
+                        <td style="vertical-align : middle;">'.$value["cliente"].'</td>
+                        
+                        <td style="vertical-align : middle;">'.$value["vendedor"].'</td>
+                        <td style="vertical-align : middle;">'.$value["metodo_pago"].'</td> 
+                        <td style="vertical-align : middle;">'.$value["neto"].'</td>
+                        <td style="vertical-align : middle;">'.$value["total"].'</td>
+                        <td style="vertical-align : middle;">'.$value["fecha"].'</td>
+                        <td style="text-align: center;">
+                          <div class="btn-group">                
+                            <button class="btn btn-info btnImprimirFactura" idConsumo="'.$value["codigo"].'"><i class="fa fa-print"></i></button>';
+                if($_SESSION["perfil"] == "Administrador"){
+                  echo '
+                            <button class="btn btn-warning btnEditarConsumo" idConsumo="'.$value["id_con"].'"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-danger btnEliminarConsumo" idConsumo="'.$value["id_con"].'"><i class="fa fa-times"></i></button>';
+                }                          
+                echo ' 
+                      </div>
+                        </td>
+                      </tr>';
+                //---------------------------------------------
+              }
+
+            }
+            ?>
+                    
+          </tbody> 
+        </table>
+        <!-- Ejecutar eliminar Venta -->
+         <?php
+        $eliminarConsumo = new ControladorConsumos();
+        $eliminarConsumo -> ctrEliminarConsumo();
+        ?>        
+      </div>
+      <!-- Fin box-body -->
+    </div>
+    <!-- /. Fin Caja predeterminada -->
+  </section>
+  <!-- Fin Contenido principal -->
+</div>

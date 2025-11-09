@@ -79,11 +79,15 @@ function isNull($campo){
 	}
 // Validar Nombre
 function isNombre($nombre){
-	if(preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $nombre)){
+	if(preg_match('/^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$/', $nombre)){
 		return true;
 	} else{
 		return false;
 	}
+}
+// Validar Apellido
+function isApellido($apellido) {
+    return isNombre($apellido);
 }
 // Validar Usuario
 function isUsuario($user){
@@ -110,6 +114,23 @@ function isPassword($pass){
 		return false;
 	}
 }
+// Verifica que el formato de fecha sea valido
+function isFechaValida($fecha) {
+    // Verifica que el formato sea aaaa-mm-dd
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/', $fecha)) {
+        return false;
+    }
+    list($anio, $mes, $dia) = explode('-', $fecha);
+    return checkdate((int)$mes, (int)$dia, (int)$anio);
+}
+// Verifica que la fecha tenga mas de 18 años
+function isMayor($fechaNacimiento) {
+    $nacimiento = new DateTime($fechaNacimiento);
+    $hoy = new DateTime();
+    $edad = $hoy->diff($nacimiento)->y;
+    return $edad >= 18;
+}
+//---------------------------------------------------------
 // Verifica que el nombre de Usuario no exista en la base de datos.
 function usuarioExiste($usuario){
 	$item = "usuario";
@@ -193,7 +214,7 @@ function enviarEmail($email, $nombre, $asunto, $cuerpo){
 	return false;
 	*/
 }
-// Cifra el password 
+// Cifra el password
 function cifrarPassword($password){
 	$hash = password_hash($password, PASSWORD_DEFAULT);
 	return $hash;

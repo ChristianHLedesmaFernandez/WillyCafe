@@ -11,7 +11,9 @@ session_start();
   <title>Willy Cafe</title>
 
    <!-- Icono de la barra del Navegador -->
-  <link rel="shortcut icon" type="image/x-icon" href="vistas/img/plantilla/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="/WillyCafe/vistas/img/plantilla/favicon.ico">
+  
+
   <!-- Para que el navegador responda al ancho de la pantalla -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -94,6 +96,7 @@ session_start();
       include "modulos/cabecera.php";
       /* Menu lateral desplegable */
       include "modulos/menu.php";
+
       /* Contenido */
       if (isset($_GET["ruta"])) {
         if ($_GET["ruta"] == "inicio" || 
@@ -102,6 +105,7 @@ session_start();
             $_GET["ruta"] == "vendedores" ||
             $_GET["ruta"] == "categorias" ||
             $_GET["ruta"] == "productos" ||
+            $_GET["ruta"] == "consumos" ||
             $_GET["ruta"] == "clientes" ||
             $_GET["ruta"] == "locales"||
             $_GET["ruta"] == "adminconsumos"||
@@ -116,7 +120,9 @@ session_start();
         }
       }else{
         include "modulos/inicio.php";
-      }  
+      }
+
+        
       /* Pie de Pagina */
       include "modulos/pie.php";
       echo '</div>';
@@ -127,7 +133,8 @@ session_start();
         if($_GET["ruta"] == "registro" ||
             $_GET["ruta"] == "recuperarpass" ||              
             $_GET["ruta"] == "cambiarpass" ||            
-            $_GET["ruta"] == "activar" ||            
+            $_GET["ruta"] == "activar" ||
+            $_GET["ruta"] == "completar-registro" ||            
             $_GET["ruta"] == "mensaje" 
             /*
             ||            
@@ -182,11 +189,8 @@ session_start();
 <script src="vistas/js/clientes.js"></script>
 <script src="vistas/js/locales.js"></script>
 <script src="vistas/js/consumos.js"></script>
-<script src="vistas/js/validar.js"></script>
-<!--
-<script src="vistas/js/consumos.js"></script>
 <script src="vistas/js/reportes.js"></script>
--->
+<script src="vistas/js/validar.js"></script>  <!-- Funcion que valida los formularios (revisando!!!) -->
 
 </body>
 </html>

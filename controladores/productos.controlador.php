@@ -5,6 +5,11 @@ class ControladorProductos{
  		$respuesta = ModeloProductos::mdlMostrarProductos($item, $valor, $orden);
 		return $respuesta;
 	}
+	// Mostrar Suma Venta
+	static public function ctrMostrarSumaVentas(){
+		$respuesta = ModeloProductos::mdlMostrarSumaVentas();
+		return $respuesta;
+	}
 	// Crear Producto
 	static public function ctrCrearProducto(){
 		if(isset($_POST["nuevaDescripcion"])){

@@ -6,7 +6,8 @@ class ModeloClientes extends ModeloUsuarios{
 	// Mostrar Cliente junto con los datos de la tabla user_config
 	static public function mdlMostrarClientes($item, $valor){
 		if (!empty($item)){
-			$stmt = Conexion::conectar() -> prepare("SELECT usuarios.*, user_config.*, locales.nombre AS local, cuentas.descuento AS descuento, cuentas.saldo_actual AS saldo, cuentas.ultima_compra FROM user_config INNER JOIN usuarios ON user_config.id_user = usuarios.id INNER JOIN locales ON usuarios.id_local = locales.id_local INNER JOIN cuentas ON usuarios.id = cuentas.id_user WHERE $item = :$item AND user_config.perfil = 'Cliente'");
+			$stmt = Conexion::conectar() -> prepare("SELECT usuarios.*, user_config.*, locales.nombre AS local, cuentas.descuento AS descuento, cuentas.saldo_actual AS saldo, cuentas.ultima_compra FROM user_config INNER JOIN usuarios ON user_config.id_user = usuarios.id INNER JOIN locales ON usuarios.id_local = locales.id_local
+				INNER JOIN cuentas ON usuarios.id = cuentas.id_user WHERE $item = :$item AND user_config.perfil = 'Cliente'");
 			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 			$stmt -> execute();
 			//return $stmt -> fetchAll();

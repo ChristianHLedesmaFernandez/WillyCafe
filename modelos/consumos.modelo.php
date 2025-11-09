@@ -16,10 +16,44 @@ class ModeloConsumos{
 			$stmt = Conexion::conectar()->prepare("SELECT consumos.*, t_cliente.nombre AS cliente, t_vendedor.nombre AS vendedor FROM consumos INNER JOIN usuarios AS t_cliente ON id_cli = t_cliente.id INNER JOIN usuarios AS t_vendedor ON id_ven = t_vendedor.id ORDER BY id_con ASC");
 			$stmt -> execute();
 			return $stmt -> fetchAll();
-		}
+		}		
 		$stmt -> close();
 		$stmt = NULL;
 	}
+	// Mostrar Rango de Fecha Consumos
+	static public function mdlMostrarRangoFechasConsumos($fechaInicial, $fechaFinal){
+		if($fechaInicial == null){
+			$stmt = Conexion::conectar()->prepare("SELECT consumos.*, t_cliente.nombre AS cliente, t_vendedor.nombre AS vendedor FROM consumos INNER JOIN usuarios AS t_cliente ON id_cli = t_cliente.id INNER JOIN usuarios AS t_vendedor ON id_ven = t_vendedor.id ORDER BY id_con ASC");
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+		}else if($fechaInicial == $fechaFinal){
+
+			$stmt =Conexion::conectar()->prepare("SELECT consumos.*, t_cliente.nombre AS cliente, t_vendedor.nombre AS vendedor FROM consumos INNER JOIN usuarios AS t_cliente ON id_cli = t_cliente.id INNER JOIN usuarios AS t_vendedor ON id_ven = t_vendedor.id WHERE fecha like '%$fechaFinal%'");
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+
+		}else{
+			$fechaActual = new DateTime();
+			$fechaActual -> add(new DateInterval("P1D"));
+			$fechaActualMasUno = $fechaActual -> format("Y-m-d");
+
+			$fechaFinal2 = new DateTime($fechaFinal);
+			$fechaFinal2 -> add(new DateInterval("P1D"));
+			$fechaFinalMasUno = $fechaFinal2 -> format("Y-m-d");
+
+			if($fechaFinalMasUno == $fechaActualMasUno){
+				$stmt = Conexion::conectar()->prepare("SELECT consumos.*, t_cliente.nombre AS cliente, t_vendedor.nombre AS vendedor FROM consumos INNER JOIN usuarios AS t_cliente ON id_cli = t_cliente.id INNER JOIN usuarios AS t_vendedor ON id_ven = t_vendedor.id WHERE fecha BETWEEN '$fechaInicial' AND '$fechaFinalMasUno'");
+
+			}else {
+				$stmt = Conexion::conectar()->prepare("SELECT consumos.*, t_cliente.nombre AS cliente, t_vendedor.nombre AS vendedor FROM consumos INNER JOIN usuarios AS t_cliente ON id_cli = t_cliente.id INNER JOIN usuarios AS t_vendedor ON id_ven = t_vendedor.id WHERE fecha BETWEEN '$fechaInicial' AND '$fechaFinal'");
+			}
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+
+		}
+	} 
+
 	// Registrar un Consumo
 	static public function mdlIngresarConsumo($datos){
 		$stmt = Conexion::conectar()->prepare("INSERT INTO consumos(codigo, id_cli, id_ven, productos, total_descuento, neto, total, metodo_pago) VALUES (:codigo, :id_cli, :id_ven, :productos, :total_descuento, :neto, :total, :metodo_pago)");
@@ -57,5 +91,32 @@ class ModeloConsumos{
 		}
 		$stmt->close();
 		$stmt = NULL;
+	}
+	// Borrar un Consumo
+	static public function mdlBorrarConsumo($datos){
+		$stmt = Conexion::conectar()->prepare("DELETE FROM consumos WHERE id_con = :id");
+		$stmt -> bindParam(":id", $datos, PDO::PARAM_INT);
+		if($stmt -> execute()){
+			return true;		
+		}else{
+			return false;
+		}
+		$stmt -> close();
+		$stmt = NULL;		
+	}	
+	// Sumar el Total Ventas
+	static public function mdlSumaTotalConsumos($item, $valor){
+		if(!empty($item)){
+			$stmt =Conexion::conectar()->prepare("SELECT SUM(neto) as total FROM consumos WHERE $item = :$item");
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+			
+		}else{
+			$stmt =Conexion::conectar()->prepare("SELECT SUM(neto) as total FROM consumos");
+			
+		}
+		$stmt -> execute();
+		return $stmt -> fetch();
+		$stmt -> close();
+		$stmt = NULL;		
 	}
 }

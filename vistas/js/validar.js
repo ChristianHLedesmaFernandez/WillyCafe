@@ -1,4 +1,5 @@
-// Idetificar grupos segun su ID
+
+// Identificar grupos segun su ID
 const grupo = {
   // Agregar
   ingNombre: "nombre",
@@ -12,9 +13,11 @@ const grupo = {
   nuevoTelefono: "telefono",
   nuevaDireccion: "direccion",
   nuevaCategoria: "categoria",
+  camPassword: "password",
   ingPassword: "password",
-  reIngPassword: "passwordR",
   nuevoPassword: "password",
+  reIngPassword: "passwordR",
+  reCamPassword: "passwordR",
   nuevaProducto: "producto",
   // Editar
   //editarLocal: 
@@ -26,7 +29,6 @@ const grupo = {
   editarPassword: "passwordE",
   editarProducto: "productoE"
 }
-//
 
 // Campos a verificar (error = false, ok = true)
 const campos = {
@@ -39,6 +41,7 @@ const campos = {
   telefono: false,
   direccion: false
 }
+
 // Expresiones Regulares
 const expresiones = {
   usuario: /^[a-zA-Z0-9]+$/, // Letras y numeros.
@@ -53,6 +56,7 @@ const expresiones = {
   //        /^\d{7,14}$/ // 7 a 14 numeros.
   direccion: /^[#\.\-a-zA-Z0-9 ]+$/
 }
+
 // Mensajes de Error
 const mensaje = {
   error: {
@@ -81,9 +85,35 @@ const mensaje = {
     direccion: "Ingrese la Direccion"
   }
 }
+
 // Funcion validar formulario
 const validarFormulario = (e) => { 
-  var input = e;
+  //var input = e.target;
+ const input = e && e.target ? e.target : e;
+ //------------------------------------   GEMINI   ----------------------------------------
+ // 🛑 REINSERCIÓN DEL GUARDRAIL NECESARIO
+  if (e && e.target) {
+    const tagName = input.tagName;
+    if (tagName && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName)) {
+        return; 
+    }
+    // Si el evento no es el 'blur' o el 'submit', salimos.
+    if (e.type !== 'blur' && e.type !== 'submit') {
+        return;
+    }
+    // Chequeo de Mapeo (puedes ponerlo aquí si aplica, o dejarlo antes del switch)
+    if (!input.id || !grupo[input.id]) {
+        return;
+    }
+  }
+
+  // Si no es un evento de ratón (ej: llamado desde el submit), chequear que esté mapeado.
+  if (!e || !e.target) {
+    if (!input.id || !grupo[input.id]) {
+        return;
+    }
+  }
+ //-----------------------------------------------------------------------------------------
   switch(input.name) {
     case "ingUsuario":
     case "nuevoUsuario":
@@ -101,11 +131,13 @@ const validarFormulario = (e) => {
     case "ingPassword":
     case "nuevoPassword":
     case "editarPassword":
+    case "password":                   // Agregado
       if(!isVacio(input)){        
         validarCampos(expresiones.password, input);
       } 
       break;
     case "reIngPassword":
+    case "rePassword":                 // Agregado
       if(campos.password){
         if(!isVacio(input)){
           validarCampos(expresiones.password, input);
@@ -164,23 +196,24 @@ const validarFormulario = (e) => {
       break;
   }
 }
+
 // Funcion que valida Cada input
 const validarCampos = (expresion, input) => {
+  limpiarMsjInput(input);
   campo = grupo[input.id];
   if(expresion.test(input.value)){ 
     document.getElementById(campo).classList.remove('has-error');
-    document.getElementById(campo).classList.add('has-success');
-    $('#msj_'+input.id).remove();
-    $('#msjVacio_'+input.id).remove();        
+    document.getElementById(campo).classList.add('has-success');    
     campos[campo] = true;
   }else{
     document.getElementById(campo).classList.remove('has-success');
     document.getElementById(campo).classList.add('has-error');
-    $('#'+input.id).parent().after('<span class="help-block" id="#msjError_'+input.id+'"><i class="fa fa-warning "></i>  ' + mensaje.error[campo] + '</span>');
+    $('#'+input.id).parent().after('<span class="help-block" id="msjError_'+input.id+'"><i class="fa fa-warning "></i>  ' + mensaje.error[campo] + '</span>');
     campos[campo] = false;
   }
 }
-// Funcion que valida el la coincidencia del Password
+
+// Funcion que valida la coincidencia del Password
 const validarPassword = (input) => {  
   const password = document.getElementById('ingPassword').value;
   const passwordR = document.getElementById('reIngPassword').value;
@@ -192,12 +225,11 @@ const validarPassword = (input) => {
   }else{      
     document.getElementById('passwordR').classList.remove('has-error');
     document.getElementById('passwordR').classList.add('has-success');
-    $('#msjVacio_'+input.id).remove();
-    $('#msj_'+input.id).remove(); 
-    $('#msjError_passwordDiferente').remove();     
+    limpiarMsjInput(input);
     campos['passwordR'] = true;
   }
 }
+
 // Funcion que valida la coincidencia de los Correos
 const validarCorreo = (input) => {
   const correo = document.getElementById('ingEmail').value;
@@ -207,99 +239,142 @@ const validarCorreo = (input) => {
     document.getElementById('correoR').classList.add('has-error');
     $('#reIngEmail').parent().after('<span class="help-block" id="msjError"><i class="fa fa-warning "></i>  '+ mensaje.error.correoDiferente +'</span>'); 
     campos['correoR'] = false;
-  }else{ 
-       
+  }else{       
     document.getElementById('correoR').classList.remove('has-error');
     document.getElementById('correoR').classList.add('has-success');
-    $('#msjVacio_'+input.id).remove();
-    $('#msj_'+input.id).remove();
-    $('#msjError').remove();     
-    campos['correoR'] = true;
-   /* */
+    limpiarMsjInput(input);   
+    campos['correoR'] = true;   
   }
 }
+
 // Funcion que valida si el campo esta vacio
 const isVacio = (input) =>{
-  campo = grupo[input.id];
-  if((input.value.trim()).length > 1){    
+  const campo = grupo[input.id];
+  limpiarMsjInput(input);
+  if((input.value.trim()).length > 0){  
     // Si No esta Vacio el Campo   
     document.getElementById(campo).classList.remove('has-error');
     document.getElementById(campo).classList.add('has-success');
-    $('#msjVacio_'+input.id).remove();
-    $('#msj_'+input.id).remove();
     campos[campo] = true;
     return false;
   }else{
     // Si esta Vacio el Campo
     document.getElementById(campo).classList.remove('has-success');
     document.getElementById(campo).classList.add('has-error');;
-    $('#'+input.id).parent().after('<span class="help-block" id="#msjVacio_'+ input.id +'"><i class="fa fa-warning "></i>  ' + mensaje.vacio[campo] + '</span>'); 
+    $('#'+input.id).parent().after('<span class="help-block" id="msjVacio_'+ input.id +'"><i class="fa fa-warning "></i>  ' + mensaje.vacio[campo] + '</span>'); 
     campos[campo] = false;
     return true;
     }
-      
-  /*return ((value.trim()).length < 1);*/
 }
 
+// Funcion Limpiar Mensajes de los input.
+const limpiarMsjInput = (input) =>{
+    $('#msjVacio_'+input.id).remove();
+    $('#msj_'+input.id).remove(); 
+    $('#msjError_passwordDiferente').remove(); 
+    $('#msjError_'+input.id).remove();
+    $('#msjError').remove();  
+    $('.alert-danger').remove();
+    //$('.help-block').remove();     
+}
+//-----------------------------------------------------
 // Localizo el formulario a Validar
 var form = document.getElementsByClassName('needs-validation');
 // Si no existe formulario no hace nada
 if (form[0] !== undefined){
-  var formulario = form[0];
+  var formulario = form[0];   
+ //------------------------------------   GEMINI   ----------------------------------------
+  // 🛑 NUEVO LISTENER: Detecta cuando el foco sale del formulario
+    formulario.addEventListener('focusout', function(e) {
+        // e.relatedTarget es el elemento al que se dirige el foco.
+        // Si el foco sale del formulario (se va a un elemento que NO está dentro de él),
+        // este valor es el elemento destino.
+
+        const elementoDestino = e.relatedTarget;
+        
+        // Comprobamos si el elemento destino es un enlace de navegación
+        // (usando la clase que ya definiste: 'link-nav')
+        if (elementoDestino && elementoDestino.classList.contains('link-nav')) {
+            
+            // 🛑 Si el destino es un enlace de navegación: Limpiamos los errores inmediatamente.
+            // Esta limpieza ocurrirá antes de que el navegador procese el clic y cambie de página.
+            
+            $('.help-block').remove();
+            $('.has-error').removeClass('has-error');
+            $('.alert-danger').remove();
+            
+            // Opcional: Podrías necesitar un pequeño retraso, pero generalmente no es necesario:
+            // setTimeout(() => {
+            //    $('.help-block').remove(); 
+            // }, 0); 
+        }
+        
+        // NOTA: Si e.relatedTarget es null, es probable que la pestaña pierda el foco,
+        // y no queremos limpiar los errores en ese caso.
+    });
+
+  
+ //----------------------------------------------------------------------------------------
   // Arreglo con todos los inputs del formulario
   const inputs = document.querySelectorAll(`#${formulario['id']} input`);
 
-
   // Disparador de la funcion
   // Se ejecuta con cada pulsacion del teclado y al perder el foco.
-  /*
-  inputs.forEach((input) => {
-      input.addEventListener('keyup', validarFormulario); // se ejecuta cuando levanto una tecla
+  
+  inputs.forEach((input) => {       
+      //input.addEventListener('keyup', validarFormulario); // se ejecuta cuando levanto una tecla
       input.addEventListener('blur', validarFormulario);  // se ejecuta cuando hago click fuera del input
   })
-  */
+
   // Se dispara al detectar el envio del formulario
   formulario.addEventListener('submit',  (e) => {
+    //
+    console.log("entrando por Submit");
+    console.log("e = ", e)
+    //
     
       e.preventDefault();
       e.stopPropagation();      
-      //$('.alert-danger').remove();
+      $('.alert-danger').remove();
       $('.help-block').remove();
-      inputs.forEach((input) => {
+     
 
+      inputs.forEach((input) => {
+        //
+        console.log("input en forEach 1 =", input)
+        //
         validarFormulario(input);
       })
+
       // Segun que formulario esta validando veo que campos son invalidos.
       switch(formulario['id']){
         case "formLogin":          
               var errores = (campos.usuario && campos.password);         
           break;
           case "formRegistro": 
-              //var errores = false;  var errores = true; 
-            //
-            console.log("errores:");
-            console.log("ingNombre: ", ingNombre);
-            console.log("ingUsuario: ", ingUsuario);
-            console.log("ingEmail: ", ingEmail);
-            console.log("reIngEmail: ", reIngEmail);
-            console.log("ingPassword: ", ingPassword);
-            console.log("reIngPassword: ", reIngPassword)
-
-
-              var errores = (ingNombre && ingUsuario && ingEmail && reIngEmail && ingPassword && reIngPassword)
+              var errores = (
+                              campos.nombre && 
+                              campos.usuario && 
+                              campos.correo && 
+                              campos.correoR && // Verifica que el reingreso de correo sea correcto
+                              campos.password && 
+                              campos.passwordR // Verifica que el reingreso de password sea correcto
+                             );
               
           break;
           case "formRecupera":          
               var errores = (campos.correo);          
           break;
+        case "formCambiarPass":          
+              //var errores = (campos.correo);   
+              console.log(errores);     
+          break;
       }
 
       if(!errores){
         //
-        console.log("Error en el Formulario");
-        //
+        console.log("Error en el Formulario", formulario['id']);        
         console.log(errores);
-        //
         console.log("No se envia!!!");
         //
       }else{        
@@ -320,11 +395,12 @@ if (form[0] !== undefined){
 }else{
 
   // Limpiar Mensajes
+  //
+  console.log("input else: ", input)
+  //
   const limpiarMsj = () =>{
-    $('.help-block').remove();
-    /*
-    inputs.forEach((input) => {
-      
+    $('.help-block').remove();    
+    inputs.forEach((input) => {      
       var msjVacio = document.getElementById('#msjVacio_'+input.id);
       var msjError = document.getElementById('#msjError_'+input.id);
       if(msjVacio != null){
@@ -334,7 +410,7 @@ if (form[0] !== undefined){
         document.getElementById('#msjError_'+input.id).remove();
       }
     })
-    */
+    /**/
   }
 
   // Limpiar el Formulario.
@@ -369,6 +445,7 @@ if (form[0] !== undefined){
 
     formulario = document.getElementById(modal);
     inputs = document.querySelectorAll(`#${modal} input`);
+
     // Para Limpiar Formulario     
     limpiarForm();
     // Fin Limpiar Formulario
@@ -380,7 +457,9 @@ if (form[0] !== undefined){
       limpiarMsj();
       // Fin Limmpiar Mensajes
       inputs.forEach((input) => {
-
+         //
+        console.log("input de forEach = ", input)
+        // 
         validarFormulario(input);
 
       })

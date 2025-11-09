@@ -21,12 +21,22 @@ class TablaProductos{
             }else{
                 $imagen = "<img src='vistas/img/productos/default/anonymous.png' width='50px'>";
             }
-			// Inserto los botones con su respectivo ID			
-			if (isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "Especial"){				
-				$botones = "<div class='btn-group'><button class='btn btn-warning btnEditarProducto btnModal' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto'><i class='fa fa-pencil'></i></button></div>";
-			}else {
-				$botones = "<div class='btn-group'><button class='btn btn-warning btnEditarProducto btnModal' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto'><i class='fa fa-pencil'></i></button><button class='btn btn-danger btnEliminarProducto' idProducto='".$productos[$i]["id"]."' codigo='".$productos[$i]["codigo"]."' imagen='".$productos[$i]["imagen"]."'><i class='fa fa-times'></i></button></div>";
-			}			
+
+
+			// Inserto los botones con su respectivo ID	
+			// Segun el perfil
+			if (isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "Cliente"){
+				$botones = "";
+			}else{
+	            //---------------------------------------------------
+				if (isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "Vendedor"){				
+					$botones = "<div class='btn-group'><button class='btn btn-warning btnEditarProducto btnModal' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto'><i class='fa fa-pencil'></i></button></div>";
+				}else {
+					$botones = "<div class='btn-group'><button class='btn btn-warning btnEditarProducto btnModal' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto'><i class='fa fa-pencil'></i></button><button class='btn btn-danger btnEliminarProducto' idProducto='".$productos[$i]["id"]."' codigo='".$productos[$i]["codigo"]."' imagen='".$productos[$i]["imagen"]."'><i class='fa fa-times'></i></button></div>";
+				}
+				//------------------------------------------
+			}
+
 			// Para el Stock            
 			if($productos[$i]["stock"] <= 10){
 				$stock = "<button class='btn btn-danger'>".$productos[$i]["stock"]."</button>";	

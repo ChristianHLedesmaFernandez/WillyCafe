@@ -42,6 +42,7 @@ class ModeloLocales{
 		$stmt -> close();
 		$stmt = NULL;
 	}
+
 	// Sugerir Local (Devuelve el id del local sugerido o 0 si no lo agrego)
 	static public function mdlSugerirLocal($datos){
 		$stmt = Conexion::conectar()->prepare("INSERT INTO locales(nombre, telefono) VALUES (:nombre, :telefono)");		
@@ -64,6 +65,7 @@ class ModeloLocales{
 		$stmt = NULL;
 		$stmt0 = NULL;
 	}
+
 	// Borrar Local
 	static public function mdlBorrarLocalSugerido($dato){
 		//$stmt = Conexion::conectar()->prepare("DELETE FROM locales WHERE id_local = :id AND telefono = -1");
@@ -77,6 +79,7 @@ class ModeloLocales{
 		$stmt -> close();
 		$stmt = NULL;
 	}
+
 	// Editar Local
 	static public function mdlEditarLocal($datos){
 		$stmt = Conexion::conectar()->prepare("UPDATE locales SET telefono = :telefono, direccion = :direccion WHERE nombre = :nombre");
@@ -91,6 +94,7 @@ class ModeloLocales{
 		$stmt->close();
 		$stmt = NULL;
 	}
+	
 	// Borrar Local
 	static public function mdlBorrarLocal($dato){
 		$stmt = Conexion::conectar()->prepare("DELETE FROM locales WHERE id_local = :id");

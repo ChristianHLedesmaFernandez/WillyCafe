@@ -1,10 +1,12 @@
 <?php 
-if($_SESSION["perfil"] == "Vendedor"){
+/*
+if($_SESSION["perfil"] == "Cliente"){
   echo '<script>
           window.location = "inicio";
         </script>';
   return;
 }
+*/
 ?>
 <div class="content-wrapper">
   <section class="content-header">
@@ -18,12 +20,20 @@ if($_SESSION["perfil"] == "Vendedor"){
     </ol>
   </section>
   <section class="content">
+    
     <div class="box">
-      <div class="box-header with-border">
-        <button class="btn btn-primary btnModal" data-toggle="modal" data-target="#modalAgregarProducto">
-          Agregar Productos
-        </button>
-      </div>
+      <?php 
+        if($_SESSION["perfil"] == "Administrador"){
+          echo '
+                <div class="box-header with-border">
+                  <button class="btn btn-primary btnModal" data-toggle="modal" data-target="#modalAgregarProducto">
+                    Agregar Productos
+                  </button>
+                 <!-- -->
+                </div>';
+        }
+       ?>     
+       
       <div class="box-body">  
         <table class="table table-bordered table-striped dt-responsive tablaProductos" width="100%">           
           <thead>
@@ -35,10 +45,18 @@ if($_SESSION["perfil"] == "Vendedor"){
              <th>Descripcion</th>          
              <th>Stock</th>
              <th>Precio de Venta</th>
-             <th>Acciones</th>
+             <?php 
+              if($_SESSION["perfil"] != "Cliente"){
+                echo '
+                   <th>Acciones</th>';
+              }
+             ?>
+
            </tr>  
           </thead>                 
         </table>
+        <!-- Para trabajar con la variable de sesion en AJAX -->
+        <input type="hidden" value="<?php echo $_SESSION["perfil"]; ?>" id="perfilOculto">
       </div>      
     </div>
   </section>

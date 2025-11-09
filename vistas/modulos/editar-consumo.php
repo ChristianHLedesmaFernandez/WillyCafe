@@ -25,13 +25,11 @@
                   <div class="box">                    
                     <?php
                       $item = "id_con";
-                      $valor = $_GET["idConsumo"];
-                      $consumo = ControladorConsumos::ctrMostrarConsumos($item, $valor);
+                      $idConsumo = $_GET["idConsumo"];
+                      $consumo = ControladorConsumos::ctrMostrarConsumos($item, $idConsumo);
                       $itemVendedor = "id";
                       $valorVendedor = $consumo["id_ven"];
-                      $vendedor = ControladorUsuarios::ctrMostrarUsuarios($itemVendedor, $valorVendedor);
-                      foreach ($vendedor as $key => $value) {
-                      }
+                      $vendedor = ControladorUsuarios::ctrMostrarUsuarios($itemVendedor, $valorVendedor)[0];
                       $itemCliente = "id";
                       $valorCliente = $consumo["id_cli"];
                       $cliente = ControladorClientes::ctrMostrarUsuarios($itemCliente, $valorCliente);
@@ -41,33 +39,25 @@
                     <div class="form-group">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                        <input type="text" class="form-control" id="nuevoVendedor" value="<?php echo $value["nombre"]?>" readonly>
-                        <input type="hidden" name="idVendedor" value="<?php echo($value["id"])?>">
+                        <input type="text" class="form-control" id="nuevoVendedor" value="<?php echo $vendedor["nombre"]?>" readonly>
+                        <input type="hidden" name="idVendedor" value="<?php echo($vendedor["id"])?>">
                       </div>
                     </div>
                     <!-- Entrada Codigo de Venta -->
                     <div class="form-group">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-barcode"></i></span>
-                        <input type="text" class="form-control" id="nuevaVenta" name="editarVenta" value="<?php echo $consumo["codigo"]?>" readonly>
+                        <input type="text" class="form-control" id="nuevoConsumo" name="editarConsumo" value="<?php echo $consumo["codigo"]?>" readonly>
+                        <input type="hidden" id="idConsumo" name="idConsumo" value="<?php echo($consumo["id_con"])?>">
                       </div>
                     </div>
                     <!-- Entrada de Cliente -->
                     <div class="form-group">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-users"></i></span>
-                        <select class="form-control seleccionarCliente" name="seleccionarCliente" id="seleccionarCliente" required>
-                          <option value="<?php echo $cliente["id"]?>"><?php echo $cliente["nombre"]?></option>
-                          <?php
-                          $item = NULL;
-                          $valor = NULL;
-                          $clientes = controladorClientes::ctrMostrarUsuarios($item, $valor);
-                          foreach ($clientes as $key => $value) {
-                            echo '<option value="'. $value["id"] .'">'. $value["nombre"] .' ' . $value["apellido"] .'</option>';
-                          }
-                          ?>
-                        </select>
-                        <span class="input-group-addon"><button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalAgregarCliente" data-dismiss="modal">Agregar Cliente</button></span>
+
+                        <input type="text" class="form-control" id="nombreCliente" name="nombreCliente" value="<?php echo $cliente["nombre"]?>"  readonly>
+                        <input type="hidden" id="seleccionarCliente" name="seleccionarCliente" value="<?php echo($cliente["id"])?>">
                       </div>
                     </div>
                     <!-- Entrada para Agregar Producto --> <!--  hidden-md hidden-sm hidden-xs -->
@@ -147,9 +137,18 @@
                       <div class="col-xs-6">
                        <div class="input-group">
                           <select class="form-control" name="nuevoMetodoPago" id="nuevoMetodoPago" required>
-                            <option value="">Seleccione Metodo de Pago</option>
-                            <option value="CuentaCorriente">Cuenta Corriente</option>
-                            <option value="Efectivo">Efectivo</option>
+                            <option value="<?php echo $consumo["metodo_pago"]?>"><?php echo $consumo["metodo_pago"]?></option>
+                            <?php
+                              if($consumo["metodo_pago"] == "Efectivo"){
+                            ?>
+                                <option value="CuentaCorriente">Cuenta Corriente</option>
+                            <?php
+                              }else{
+                            ?>
+                                <option value="Efectivo">Efectivo</option>
+                            <?php
+                              }
+                            ?>
                           <!--
                             <option value="tarjetaCredito">Tarjeta Credito</option>
                             <option value="tarjetaDebito">Tarjeta Debito</option>
@@ -157,15 +156,6 @@
                           </select>                     
                         </div> 
                       </div>
-                      <!-- Codigo de Transaccion
-                      <div class="col-xs-6" style="padding-left: 0px">
-                        <div class="input-group">                      
-                          <input type="text" class="form-control" id="nuevoCodigoTransaccion" name="nuevoCodigoTransaccion" placeholder="Código de Transacción" required>
-                          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        </div>                        
-                      </div>
-                       -->
-
                       <div class="cajasMetodoPago">  
 
                       </div>
@@ -215,99 +205,3 @@
   </section>  
 </div>
 
-<!-- Comienzo Modal para Agregar Cliente -->
-<div id="modalAgregarCliente" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    <form role="form" method="POST" id="formAgregarCliente" novalidate>
-        <div class="modal-header" style="background: #3c8dbc; color: white">
-          <h4 class="modal-title">Agregar Cliente</h4>
-        </div>
-        <div class="modal-body">          
-          <div class="box-body">
-            <!-- Ingresar Nombre -->
-            <div class="form-group" id = nombre>
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-user"></i>
-                </span>
-                <input class="form-control input-lg" type="text" id="nuevoNombre" name="nuevoNombre" placeholder="Ingresar Nombre" required>              
-              </div>
-
-            </div>
-            <!-- Ingresar Apellido 
-            <div class="form-group">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-user"></i>
-                </span>
-                <input class="form-control input-lg" type="text" id="nuevoApellido" name="nuevoApellido" placeholder="Ingresar Apellido">            
-              </div>
-            </div> -->
-            <!-- Ingresar Usuario -->
-            <div class="form-group" id="usuario">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-key"></i>
-                </span>
-                <input class="form-control input-lg" type="text" name="nuevoUsuario" placeholder="Ingresar usuario" id="nuevoUsuario" required>              
-              </div>            
-            </div>
-            <!-- Ingresar Email-->
-            <div class="form-group" id="correo">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-envelope"></i>
-                </span>
-                <input class="form-control input-lg" type="email" id="nuevoEmail" name="nuevoEmail" placeholder="Ingresar Correo Electronico">
-              </div>
-            </div>
-            <!-- Ingresar Telefono-->
-            <div class="form-group" id="telefono">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fa fa-phone"></i>
-                </span>
-                <input class="form-control input-lg" type="text" id="nuevoTelefono" name="nuevoTelefono" placeholder="Ingresar Telefono" data-inputmask="'mask':'(999) 9999-9999'" data-mask>
-              </div>
-            </div>
-            <!-- Seleccionar Local -->
-            <div class="form-group" id="local">
-              <div class="input-group" id="nuevoAgregarNombre">
-                <span class="input-group-addon">
-                  <i class="fa fa-building-o"></i>
-                </span>
-                <select class="form-control input-lg" id="nuevoLocal" name="nuevoLocal" required> 
-                  <!-- Llenar el SELECT -->
-                    <option value="">Seleccionar un Local</option>
-                    <?php
-                      $item = NULL;
-                      $valor =NULL;
-                      $locales = ControladorLocales:: ctrMostrarLocales($item, $valor);
-                      foreach ($locales as $key => $value) {
-                        echo "<option value = ".$value['id_local'].">";
-                        echo utf8_encode($value['nombre']); 
-                        echo "</option>";
-                      }                                          
-                    ?>                   
-                    <option value="0">Ninguno</option>
-                    <option value="agregarlocal">Agregar Local</option>
-                    <!-- Fin llenar -->
-                </select> 
-              </div>            
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">          
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>          
-          <button type="submit" class="btn btn-primary">Guardar Cliente</button>
-        </div>
-      </form>
-      <?php 
-      $crearCliente = new ControladorClientes();
-      $crearCliente -> ctrCrearCliente();
-       ?>
-    </div>
-  </div>
-</div>
-<!-- Fin Agregar Cliente --> 

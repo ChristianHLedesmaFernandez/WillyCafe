@@ -18,6 +18,22 @@ class ModeloProductos{
 		$stmt -> close();
 		$stmt = NULL;
 	}
+
+	// Mostrar Suma Productos
+	static public function mdlMostrarSumaVentas(){
+
+		$stmt =Conexion::conectar()->prepare("SELECT SUM(ventas) as total FROM productos");
+
+		$stmt -> execute();
+
+		return $stmt -> fetch();
+
+		$stmt -> close();
+
+		$stmt = NULL;
+
+	}
+
 	// Ingresar Producto
 	static public function mdlCrearProducto($datos){
 		$stmt = Conexion::conectar()->prepare("INSERT INTO productos(id_categoria, codigo, descripcion, imagen, stock, precio_venta) VALUES (:id_categoria, :codigo, :descripcion, :imagen, :stock, :precio_venta)");

@@ -1,3 +1,11 @@
+<?php 
+if($_SESSION["perfil"] == "Cliente"){
+  echo '<script>
+          window.location = "inicio";
+        </script>';
+  return;
+}
+?>
 <div class="content-wrapper">
   <section class="content-header">
     <h1>
@@ -60,10 +68,12 @@
                           <option value="">Seleccionar Cliente</option>
                           <?php
                           $item = NULL;
-                          $valor = NULL;
+                          $valor = NULL;                          
                           $clientes = controladorClientes::ctrMostrarUsuarios($item, $valor);
                           foreach ($clientes as $key => $value) {
-                            echo '<option value="'. $value["id"] .'">'. $value["nombre"] .' ' . $value["apellido"] .'</option>';
+                            if($value["estado"] == 4 || $value["estado"] == 3){
+                              echo '<option value="'. $value["id"] .'">'. $value["nombre"] .' ' . $value["apellido"] .'</option>';  
+                            }                            
                           }
                           ?>
                         </select>                        

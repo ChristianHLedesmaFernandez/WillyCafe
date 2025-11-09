@@ -109,6 +109,7 @@ if($_SESSION["perfil"] == "Cliente"){
           <button type="submit" class="btn btn-primary">Guardar Local</button> 
         </div>
         <?php
+        
           $crearLocal = new ControladorLocales();
           $crearLocal -> ctrCrearLocal();
          ?>

@@ -83,9 +83,9 @@ class ControladorSolicitudes extends ControladorUsuarios{
                 $asunto = 'Solicitud Rechazada - Willy Cafe';
                 if($_POST['mensaje'] != ''){
                 	$mensaje = $_POST['mensaje'];
-                    $cuerpo = "Estimado ".$nombre.": <br/><br />No han aceptado su solicitud de registro. <br />El Administrador adjunto este mensaje: <br/>".$mensaje."<br/><br/> Lo sentimos mucho.";
+                    $cuerpo = "Estimad@ ".$nombre.": <br/><br />No han aceptado su solicitud de registro. <br />El Administrador adjunto este mensaje: <br/>".$mensaje."<br/><br/> Lo sentimos mucho.";
                 } else{
-                    $cuerpo = "Estimado ".$nombre.": <br/><br />No han aceptado su solicitud de registro. No se ha indicado los motivos. <br /> Lo sentimos mucho.";  
+                    $cuerpo = "Estimad@ ".$nombre.": <br/><br />No han aceptado su solicitud de registro. No se ha indicado los motivos. <br /> Lo sentimos mucho.";  
                 }
                 if(!enviarEmail($email, $nombre, $asunto, $cuerpo)){
                 	echo '<script>

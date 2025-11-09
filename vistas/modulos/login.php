@@ -17,7 +17,7 @@ $fondo = rand(0, (count($fondosArray)-1));
 
  ?>
  <!-- Estilo para hacer el Fondo Aleatorio -->
-<div style=" 
+<div style="
             position: absolute;
             top: 0;
             left: 0;
@@ -32,13 +32,11 @@ $fondo = rand(0, (count($fondosArray)-1));
 
   <div class="login-logo">
  
-    <a href="vistas/index2.html"><img src="vistas/img/plantilla/willycafe-mini.ico">
+    <a href="vistas/index2.html" style= "font-size: 64px"><img src="vistas/img/plantilla/willycafe-mini.ico" width= "74px" height="74px">
     <b>Willy</b>CAFE</a>
-  <!-- 
-    <img src="img/loto.png" class="img-responsive" style="padding: 10px 0px">
--->
   </div>
   <!-- Fin login-logo -->
+
   <div class="login-box-body">
     
     <p class="login-box-msg">Iniciar Sesion</p>
@@ -110,8 +108,8 @@ $fondo = rand(0, (count($fondosArray)-1));
        
 
     <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-      <a href="recuperarpass">¿Olvid&oacute; su contraseña?</a><br>    
-      No tiene una cuenta! <a href="registro" class="text-center">Solicitar Registro aquí</a>
+      <a href="recuperarpass" class="link-nav">¿Olvid&oacute; su contraseña?</a><br>    
+      No tiene una cuenta! <a href="registro" class="text-center link-nav">Solicitar Registro aquí</a>
     </div>
    
 
