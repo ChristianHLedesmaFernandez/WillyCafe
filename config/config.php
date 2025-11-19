@@ -6,8 +6,8 @@
 	define('HOST', 'localhost');
 	define('DB', 'WillyCafe');
 	define('USER', 'christian');
-	define('PASSWORD', 'ledesma');
+	define('PASSWORD', 'xxxxxx');
 	define('CHARSET', 'utf8mb4');	
 	// Contantes para enviar Correo.
-	define('MAIL-USER', 'christianhledesma2025@gmail.com');
-	define('MAIL-PASSWORD', 'zhdp oyta neff czwy');
+	define('MAIL-USER', 'Mail');
+	define('MAIL-PASSWORD', 'zhdp oyta xxxx xxxx');
