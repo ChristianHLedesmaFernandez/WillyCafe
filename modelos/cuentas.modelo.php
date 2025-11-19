@@ -1,4 +1,4 @@
-x<?php 
+<?php 
 
 require_once "conexion.php";
 

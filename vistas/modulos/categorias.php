@@ -112,12 +112,13 @@ if($_SESSION["perfil"] == "Cliente"){
     </div>
   </div>
 </div>
-<!-- Fin Agregar Categoria --> 
+
+
 <!-- Comienzo Modal para Editar Categoria -->
 <div id="modalEditarCategoria" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
-    <form role="form" method="POST" id="formEditarCategoria" novalidate> <!-- class="needs-validation" -->
+    <form role="form" method="POST" id="formEditarCategoria" class="needs-validation" novalidate> <!-- -->
         <!-- Cabeza del Modal -->
         <div class="modal-header" style="background: #3c8dbc; color: white">        
           <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->

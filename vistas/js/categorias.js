@@ -12,6 +12,7 @@ $(".tablas").on("click", ".btnEditarCategoria",function(){
 	var idCategoria = $(this).attr("idCategoria");
 	var datos = new FormData();
 	datos.append("idCategoria", idCategoria);
+	
 	$.ajax({
 		url: "ajax/categorias.ajax.php",
 		method: "POST",
@@ -21,12 +22,19 @@ $(".tablas").on("click", ".btnEditarCategoria",function(){
      	processData: false,
      	dataType:"json",
      	success: function(respuesta){
-
+     	//
+			console.log("nunca pasa por aca ");
+			//	
 			$("#editarCategoria").val(respuesta["categoria"]);
 			$("#idCategoria").val(respuesta["id"]);
 		}
+		
 	})
+	//
+		console.log("sale sin obtener respuesta");
+		//
 })
+
 // Eiminar Categoria
 $(".tablas").on("click", ".btnEliminarCategoria",function(){
 	var idCategoria = $(this).attr("idCategoria");

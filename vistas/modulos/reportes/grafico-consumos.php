@@ -12,28 +12,28 @@ if(isset($_GET["fechaInicial"])){
 $respuesta = ControladorConsumos:: ctrMostrarRangoFechasConsumos($fechaInicial, $fechaFinal);
 $arrayFechas = array();
 $sumaPagoMes = array();
+
 foreach ($respuesta as $item) {
-    // Capturamos solo año y mes
-    $fecha = substr($item["fecha"], 0, 7);
-    // Guardar la fecha
-    $arrayFechas[] = $fecha;
-    // Inicializar si no existe
-    if (!isset($sumaPagoMes[$fecha])) {
-        $sumaPagoMes[$fecha] = 0;
-    }
+		if($_SESSION["perfil"] == "Administrador" || $_SESSION["id"] == $item["id_ven"]){
+			// Capturamos solo año y mes
+		    $fecha = substr($item["fecha"], 0, 7);
+		    // Guardar la fecha
+		    $arrayFechas[] = $fecha;
+		    // Inicializar si no existe
+		    if (!isset($sumaPagoMes[$fecha])) {
+		        $sumaPagoMes[$fecha] = 0;
+		    }
+		}
     // Sumar el total del mes
     $sumaPagoMes[$fecha] += floatval($item["total"]);//$item["total"];
 }
 $noRepetirFecha = array_unique($arrayFechas);
-
-//var_dump($sumaPagoMes);
-
 ?>
 <!-- Grafico de Consumos (bg-teal-gradient) degradado -->
 <div class="box box-solid bg-teal-gradient">
 	<div class="box-header">		
 		<i class="fa fa-th"></i>
-		<h3 class="box-title">Gráfico de Consumos</h3>
+		<h3 class="box-title">Gráfico de Ventas</h3>
 	</div>
 	<div class="box-body border-radius-none nuevoGraficoConsumos">
 		<div class="chart" id="line-chart-consumos" style="height:250px;"></div>		

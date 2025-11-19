@@ -23,7 +23,20 @@ class ControladorConsumos{
 			$neto = $_POST["nuevoPrecioNeto"];
 			$total = $_POST["totalVenta"];
 			$metodoPago = $_POST["nuevoMetodoPago"];
+			//
+			/*
+			printf("aca vemos lo que viene desde crear consumo");
+			printf($codigo);
+			printf($cliente);
+			printf($vendedor);
+			printf($descuento);
+			printf($neto);
+			printf($total);
+			printf($metodoPago);
+			*/
+			//
 			// Fin Recibir
+			
 			if(!empty($productos)){ // Verifico si la lista no este vacia
 				// Actualizar las compras del cliente, reducir Stock y aumentar las ventas de los productos
 				$listaProductos = json_decode($productos, true);

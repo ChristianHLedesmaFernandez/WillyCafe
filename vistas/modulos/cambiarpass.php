@@ -40,12 +40,13 @@ $validar -> ctrValidarTokenPass();
     <p class="login-box-msg">Cambiar Password</p>
 
     <form method="POST" class="needs-validation" id="formCambiarPass" novalidate>
-
-      <div class="form-group has-feedback">
+      <!-- Ingrese nuevo password -->
+      <div class="form-group has-feedback" id="password">
         <input type="password" class="form-control" placeholder="Ingrese nuevo Password" name="password" id="password" idrequired>
         <span style="background-color: 'red;';" class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
-      <div class="form-group has-feedback">
+      <!-- Confirmar nuevo password -->
+      <div class="form-group has-feedback" id="passwordR">
         <input type="password" class="form-control" placeholder="Repita password" name="rePassword" id="rePassword" required>
         <span class="glyphicon glyphicon-repeat form-control-feedback"></span>
       </div>

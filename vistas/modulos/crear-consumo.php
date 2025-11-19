@@ -134,7 +134,8 @@ if($_SESSION["perfil"] == "Cliente"){
                           <select class="form-control" name="nuevoMetodoPago" id="nuevoMetodoPago" required>
                             <option value="">Seleccione Metodo de Pago</option>
                             <option value="CuentaCorriente">Cuenta Corriente</option>
-                            <option value="Efectivo">Efectivo</option>
+                            <option value="Efectivo">Efectivo</option>'
+
                           <!--
                             <option value="tarjetaCredito">Tarjeta Credito</option>
                             <option value="tarjetaDebito">Tarjeta Debito</option>

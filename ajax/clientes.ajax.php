@@ -16,13 +16,11 @@ class AjaxClientes{
 		$valor = $this -> idCliente;
 		$respuesta = controladorClientes::ctrMostrarUsuarios($item, $valor);
 		echo json_encode($respuesta);
-		//echo json_encode($respuesta[0]);
 	}
 
 }
 
 //             Objetos
-
 // Objeto Editar Cliente
 if(isset($_POST["idCliente"])){
 	$cliente = new AjaxClientes();

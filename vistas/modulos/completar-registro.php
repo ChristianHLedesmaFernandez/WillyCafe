@@ -45,7 +45,7 @@ $fondo = rand(0, (count($fondosArray)-1));
       <div class="form-group has-feedback" id="nombre">
         <div>
           <?php 
-            echo'<input type="text" class="form-control" placeholder="'. $cliente["nombre"].'" name="ingNombre" id="ingNombre" readonly>';
+            echo'<input type="text" class="form-control" placeholder="'. $cliente["nombre"].'" name="ingNombre" id="ingNombre" value="'. $cliente["nombre"] .'" readonly>';
             echo '<input type="hidden" value="'. $valor .'" id="idUsuario" name="idUsuario">';
             echo '<input type="hidden" value="'. $cliente["usuario"] .'" id="usuario" name="usuario">';
            ?>          
@@ -53,7 +53,7 @@ $fondo = rand(0, (count($fondosArray)-1));
         </div>
       </div>
       <!-- Ingresar Apellido -->
-      <div class="form-group has-feedback" id="nombre">
+      <div class="form-group has-feedback" id="apellido">
         <div>
           <input type="text" class="form-control" placeholder="Apellido" id="ingApellido" name="ingApellido" required autofocus>
           <span class="fa fa-address-card form-control-feedback "></span>    
@@ -63,7 +63,7 @@ $fondo = rand(0, (count($fondosArray)-1));
       <div class="form-group has-feedback" id="usuario">
         <div>
           <?php 
-            echo'<input type="text" class="form-control" placeholder="'. $cliente["usuario"].'" name="ingUsuario" id="ingUsuario" readonly>'
+            echo'<input type="text" class="form-control" placeholder="'. $cliente["usuario"].'" name="ingUsuario" id="ingUsuario" value="'. $cliente["usuario"] .'" readonly>'
            ?>
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
@@ -72,7 +72,7 @@ $fondo = rand(0, (count($fondosArray)-1));
       <div class="form-group has-feedback" id="correo">
         <div>
           <?php 
-            echo '<input type="email" class="form-control" placeholder="'. $cliente["correo"].'" name="ingEmail" id="ingEmail" readonly>';
+            echo '<input type="email" class="form-control" placeholder="'. $cliente["correo"].'" name="ingEmail" id="ingEmail" value="'. $cliente["correo"] .'" readonly>';
            ?>          
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
         </div>
@@ -86,7 +86,7 @@ $fondo = rand(0, (count($fondosArray)-1));
         </div>
       </div>
       <!-- Ingresar Fecha de Nacimiento -->
-      <div class="form-group has-feedback" id="nombre">
+      <div class="form-group has-feedback" id="FechaNacimiento">
         <div>
           <input type="date" class="form-control" placeholder="Fecha de Nacimiento" id="ingFechaNacimiento" name="ingFechaNacimiento" required autofocus>
           <span class="glyphicon glyphicon-gift form-control-feedback"></span>

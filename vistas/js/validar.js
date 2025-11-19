@@ -4,6 +4,7 @@ const grupo = {
   // Agregar
   ingNombre: "nombre",
   nuevoNombre: "nombre",
+  ingApellido: "apellido",
   ingUsuario: "usuario",
   nuevoUsuario: "usuario",
   ingEmail: "correo",
@@ -19,6 +20,8 @@ const grupo = {
   reIngPassword: "passwordR",
   reCamPassword: "passwordR",
   nuevaProducto: "producto",
+  ingTelefono: "telefono",
+  ingFecha: "ingFechaNacimiento",
   // Editar
   //editarLocal: 
   editarNombre: "nombreE",
@@ -33,12 +36,14 @@ const grupo = {
 // Campos a verificar (error = false, ok = true)
 const campos = {
   nombre: false,
+  apellido: false,
   usuario: false,
   correo: false,
   correoR: false,
   password: false,
   passwordR: false,
   telefono: false,
+  fecha: false,
   direccion: false
 }
 
@@ -62,6 +67,7 @@ const mensaje = {
   error: {
     usuario: "Ingrese solo letras y numeros",
     nombre: "Ingrese solo letras espacios, tilde y ñ",
+    apellido: "Ingrese solo letras espacios, tilde y ñ",
     local: "Ingrese solo letras espacios, tilde y ñ",
     categoria: "Ingrese solo letras espacios, tilde y ñ",
     password: "Ingrese solo letras y numeros",
@@ -70,6 +76,7 @@ const mensaje = {
     correoR: "Reingrese el correo en un formato valido",
     correoDiferente: "Los correos no coinciden",
     telefono: "Ingrese el telefono en el formato valido",
+    fecha: "ingrese una fecha Valida",
     direccion: "Ingrese solo letras, numeros y el simbolo numeral"
   },
   vacio: {
@@ -114,6 +121,15 @@ const validarFormulario = (e) => {
     }
   }
  //-----------------------------------------------------------------------------------------
+  
+
+
+  //
+  console.log("input.name", input.name);
+  //
+
+
+
   switch(input.name) {
     case "ingUsuario":
     case "nuevoUsuario":
@@ -137,6 +153,7 @@ const validarFormulario = (e) => {
       } 
       break;
     case "reIngPassword":
+    case "reCamPassword":
     case "rePassword":                 // Agregado
       if(campos.password){
         if(!isVacio(input)){
@@ -180,7 +197,7 @@ const validarFormulario = (e) => {
         validarCampos(expresiones.nombre, input);
       }
       break;
-    //case "ingTelefono":
+    case "ingTelefono":
     case "nuevoTelefono":
     case "editarTelefono":
       if(!isVacio(input)){          
@@ -282,7 +299,10 @@ const limpiarMsjInput = (input) =>{
 var form = document.getElementsByClassName('needs-validation');
 // Si no existe formulario no hace nada
 if (form[0] !== undefined){
-  var formulario = form[0];   
+  var formulario = form[0];  
+  //
+  console.log("formulario a validar: ", formulario["id"]);
+  // 
  //------------------------------------   GEMINI   ----------------------------------------
   // 🛑 NUEVO LISTENER: Detecta cuando el foco sale del formulario
     formulario.addEventListener('focusout', function(e) {
@@ -317,35 +337,22 @@ if (form[0] !== undefined){
  //----------------------------------------------------------------------------------------
   // Arreglo con todos los inputs del formulario
   const inputs = document.querySelectorAll(`#${formulario['id']} input`);
-
   // Disparador de la funcion
-  // Se ejecuta con cada pulsacion del teclado y al perder el foco.
-  
+  // Se ejecuta con cada pulsacion del teclado y al perder el foco.  
   inputs.forEach((input) => {       
       //input.addEventListener('keyup', validarFormulario); // se ejecuta cuando levanto una tecla
       input.addEventListener('blur', validarFormulario);  // se ejecuta cuando hago click fuera del input
   })
 
   // Se dispara al detectar el envio del formulario
-  formulario.addEventListener('submit',  (e) => {
-    //
-    console.log("entrando por Submit");
-    console.log("e = ", e)
-    //
-    
+  formulario.addEventListener('submit',  (e) => {    
       e.preventDefault();
       e.stopPropagation();      
       $('.alert-danger').remove();
       $('.help-block').remove();
-     
-
       inputs.forEach((input) => {
-        //
-        console.log("input en forEach 1 =", input)
-        //
         validarFormulario(input);
       })
-
       // Segun que formulario esta validando veo que campos son invalidos.
       switch(formulario['id']){
         case "formLogin":          
@@ -359,18 +366,23 @@ if (form[0] !== undefined){
                               campos.correoR && // Verifica que el reingreso de correo sea correcto
                               campos.password && 
                               campos.passwordR // Verifica que el reingreso de password sea correcto
-                             );
-              
+                             );              
           break;
           case "formRecupera":          
               var errores = (campos.correo);          
           break;
-        case "formCambiarPass":          
-              //var errores = (campos.correo);   
-              console.log(errores);     
+          case "formCambiarPass":          
+              var errores = (campos.password && 
+                             campos.passwordR);
+              console.log("paso por aca Ahora");
+          break;
+        case "formCompletarRegistro":          
+              var errores = (campos.apellido &&
+                             campos.fecha && 
+                             campos.telefono);
+              console.log("paso por aca Ahora");
           break;
       }
-
       if(!errores){
         //
         console.log("Error en el Formulario", formulario['id']);        
@@ -379,25 +391,16 @@ if (form[0] !== undefined){
         //
       }else{        
         formulario.submit();
-      }
-      
-      /*
-      const captcha = grecaptcha.getResponse();
-
-      if(campos.usuario && campos.nombre && campos.password && campos.correo && campos.telefono && terminos.checked){
-          
-      }else{        
-          
-      }
-      */
-
+      }        
   });
 }else{
 
+//-------------------------------------- GEMINI ----------------------------------------------
   // Limpiar Mensajes
   //
   console.log("input else: ", input)
   //
+
   const limpiarMsj = () =>{
     $('.help-block').remove();    
     inputs.forEach((input) => {      
@@ -410,10 +413,11 @@ if (form[0] !== undefined){
         document.getElementById('#msjError_'+input.id).remove();
       }
     })
-    /**/
+   
   }
 
   // Limpiar el Formulario.
+ 
   const limpiarForm = () =>{
     inputs.forEach((input) => {
       if(document.getElementsByClassName("has-success").length > 0){
@@ -424,7 +428,9 @@ if (form[0] !== undefined){
       }
     })
   }
-
+ 
+    // Detectar al boton que abre el modal.
+//-----------------------------------------------------------------------------------------------
   // Detectar al boton que abre el modal.    
   $(document).on("click", ".btnModal",function(e){
     // Para Limpiar Formulario     
@@ -433,13 +439,13 @@ if (form[0] !== undefined){
     modal = "form" + $(this).attr("data-target").substr(6);
 
     //Diferenciar entre Editar y Agregar
-    /*
+   
     if(modal.includes("Agregar")){
       console.log("es el formulario Agregar");
     }else{
       console.log("el el formulario Editar");
     }
-    */
+    /* */
     // Fin diferenciar
 
 

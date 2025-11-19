@@ -1,17 +1,16 @@
-<?php 
-
+<?php
 session_start();
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
   <title>Willy Cafe</title>
 
    <!-- Icono de la barra del Navegador -->
-  <link rel="shortcut icon" type="image/x-icon" href="/WillyCafe/vistas/img/plantilla/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="vistas/img/plantilla/favicon.ico">
   
 
   <!-- Para que el navegador responda al ancho de la pantalla -->
@@ -87,8 +86,7 @@ session_start();
 <!-- sidebar-collapse sirve para que el menu comienze oculto -->
 <body class="hold-transition skin-blue sidebar-collapse sidebar-mini login-page">  
 <!-- Contenedor del Sitio -->
-  <?php 
-
+<?php
   if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"]) {
   
       echo '<div class="wrapper">';
@@ -121,44 +119,28 @@ session_start();
       }else{
         include "modulos/inicio.php";
       }
-
         
       /* Pie de Pagina */
       include "modulos/pie.php";
       echo '</div>';
-  }else{
-  
+  }else{   
     if (isset($_GET["ruta"])) {
-
         if($_GET["ruta"] == "registro" ||
             $_GET["ruta"] == "recuperarpass" ||              
             $_GET["ruta"] == "cambiarpass" ||            
             $_GET["ruta"] == "activar" ||
             $_GET["ruta"] == "completar-registro" ||            
-            $_GET["ruta"] == "mensaje" 
-            /*
-            ||            
-            $_GET["ruta"] == "mensaje01" ||             
-            $_GET["ruta"] == "mensaje01" || 
-            $_GET["ruta"] == "mensaje01" ||            
-            $_GET["ruta"] == "mensaje02" ||            
-            $_GET["ruta"] == "mensaje03" ||            
-            $_GET["ruta"] == "mensaje04" 
-            */
+            $_GET["ruta"] == "mensaje"
             ){
-
-        //include "modulos/registro.php";
         include "modulos/".$_GET["ruta"].".php";
       }else{
         include "modulos/login.php";
       }
     }else {
       include "modulos/login.php"; 
-    }   
-
+    }    
   }
-
-  ?>
+?>
 <!-- Aca estaria la Cabezera principal -->
 <!-- Fin Cabezera Principal -->
 

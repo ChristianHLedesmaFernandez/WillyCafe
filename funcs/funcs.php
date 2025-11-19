@@ -136,22 +136,14 @@ function usuarioExiste($usuario){
 	$item = "usuario";
 	$valor = $usuario;
 	$respuesta = ModeloUsuarios::mdlMostrarUsuarios($item, $valor);		
-	if ($respuesta){
-		return true;
-	} else{
-		return false;
-	}
+	return $respuesta;
 }
 // Verifica que el correo ingresado no exista en la base de datos.
 function emailExiste($email){
 	$item = "correo";
 	$valor = $email;
 	$respuesta = ModeloUsuarios::mdlMostrarUsuarios($item, $valor);	
-	if ($respuesta){		
-		return true;
-	} else{
-		return false;	
-	}
+	return $respuesta;
 }
 // Verifica que los email sean iguales.
 function validarEmail($var1, $var2){
@@ -171,24 +163,10 @@ function validarPassword($var1, $var2){
 }
 // Verifica que el usuario ingresado este activo
 function isActivo($estado){
-	return ($estado == 3 || $estado == 4);
-	/*
-	if ($estado == 3 || $estado == 4){
-		return true;
-	} else{
-		return false;	
-	}
-	*/
-}
+	return ($estado == 3 || $estado == 4);}
 // Verifica si el usuario ingresa por primera vez
 function primeraVez($estado){
 	return ($estado == 3);
-	/*
-	if($estado == 3) {	
-		return true;
-	}			
-	return false;
-	*/
 }
 // Envia mail 
 function enviarEmail($email, $nombre, $asunto, $cuerpo){
@@ -207,12 +185,6 @@ function enviarEmail($email, $nombre, $asunto, $cuerpo){
 	$mail->Body    = $cuerpo;
 	$mail->IsHTML(true);
 	return $mail->send();
-	/*		
-	if()
-	return true;
-	else
-	return false;
-	*/
 }
 // Cifra el password
 function cifrarPassword($password){
@@ -224,4 +196,3 @@ function generaToken(){
 	$gen = md5(uniqid(mt_rand(), false));	
 	return $gen;
 }
-?>

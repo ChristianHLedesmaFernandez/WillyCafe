@@ -275,6 +275,27 @@ $(document).on("change", "select.seleccionarCliente",function(){
         }
     });
 })
+// Cuando elijo Cliente Casual convierto el metodo de pago solo en efectivo
+$(document).on("change", "select.seleccionarCliente",function(){
+	var idCliente = $(this).val();
+	// Limpiar cualquier campo hidden previo del método de pago que pudiera existir
+    $('input[name="nuevoMetodoPago"][type="hidden"]').remove()
+    if (idCliente == "4") {        
+        $("#nuevoMetodoPago").val("Efectivo");
+        $("#nuevoMetodoPago").prop('disabled', true);        
+        // Inyectar un campo hidden que SIEMPRE envía el valor "Efectivo"
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'nuevoMetodoPago',
+            value: 'Efectivo'
+        }).appendTo('form.formularioConsumo');
+        $("#nuevoMetodoPago").trigger('change');
+    } else {
+        $("#nuevoMetodoPago").val(""); 
+        $("#nuevoMetodoPago").prop('disabled', false);
+        $("#nuevoMetodoPago").trigger('change');
+    }
+});
 // Formato al precio Final
 $("#nuevoTotalVenta").number(true, 2);
 // Seleccionar Metodo de Pago
@@ -427,20 +448,12 @@ $('#daterange-btn').daterangepicker(
     	
     }
 )
-
 // Cancelar Rango de Fechas
 $(".daterangepicker.opensleft .range_inputs .cancelBtn").on("click", function(){
-
 	localStorage.removeItem("capturarRango");
 	localStorage.clear();
-
-	//if($(this).attr("boton") == "paginaVentas"){
-
 		window.location = "adminconsumos";
-
-	//}
 })
-
 // Capturar Hoy
 $(".daterangepicker.opensleft .ranges li").on("click", function(event){
 	var textoHoy = $(this).attr("data-range-key");
@@ -458,14 +471,9 @@ $(".daterangepicker.opensleft .ranges li").on("click", function(event){
 		var fechaInicial = año+ "-" + mes + "-" + dia;
 		var fechaFinal = año+ "-" + mes + "-" + dia;		
 		localStorage.setItem("capturarRango", "Hoy");
-
-		//if($(this).attr("boton") == "paginaVentas"){
 			window.location = "index.php?ruta=adminconsumos&fechaInicial="+fechaInicial+"&fechaFinal="+fechaFinal;
-		//}
 	}
-
 })
-
 
 // Para la carga Dinamica de la tabla Productos
 $('.tablaConsumos').DataTable({

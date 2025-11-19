@@ -3,7 +3,7 @@
   <section class="content-header">
     <h1>
       Reporte de Consumos
-      <small>Crear reportes de Consumos</small>
+      <small>Crear reportes de Ventas</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i>Inicio</a></li>
@@ -27,23 +27,22 @@
         <div class="box-tools pull-right">
           <!-- Comienzo Boton de Reporte en Excel -->
           <?php 
-          if(isset($_GET['fechaInicial'])){
-            echo  '<a href="vistas/modulos/descargar-reporte.php?reporte=reporte&fechaInicial='.$_GET["fechaInicial"].'&fechaFinal='.$_GET["fechaFinal"].'">';
-          }else{
-            echo  '<a href="vistas/modulos/descargar-reporte.php?reporte=reporte">';
-          }            
-          
-          ?>  
-            <button class="btn btn-success" style="margin-top:5px">
-                Descargar reporte en Excel
-            </button>
-          </a>
+            if(isset($_GET['fechaInicial'])){
+              echo  '<a href="vistas/modulos/descargar-reporte.php?reporte=reporte&fechaInicial='.$_GET["fechaInicial"].'&fechaFinal='.$_GET["fechaFinal"].'">';
+            }else{
+              echo  '<a href="vistas/modulos/descargar-reporte.php?reporte=reporte">';
+            }
 
-          
+            if($_SESSION["perfil"] == "Administrador"){
+              echo '
+                    <button class="btn btn-success" style="margin-top:5px">
+                      Descargar reporte en Excel
+                    </button>';              
+            }
+          ?>
+          </a>          
           <!-- Fin Boton Reporte -->
-        </div>  
-        
-        
+        </div>
 
       </div>
       <div class="box-body">
@@ -74,8 +73,6 @@
         </div>
 
       </div>
-     
-
       
     </div>
 
